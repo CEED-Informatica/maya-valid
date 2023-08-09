@@ -1,0 +1,28 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.actions.act_window" id="maya_valid.action_config_settings">
+      <field name="name">Configuración</field>
+      <field name="res_model">res.config.settings</field>
+      <field name="view_mode">form</field>
+      <field name="target">inline</field> <!-- new window: emergente, curret: en al misma, inline: sin botones editar/crear-->
+      <field name="context">{'module': 'maya_valid'}</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Maya | Convalidaciones" id="maya_valid.menu_root"/>
+
+    <!-- menu categories -->
+    <menuitem name="Convalidaciones" id="maya_valid.school" parent="maya_valid.menu_root"/>
+    <menuitem name="Configuración" id="maya_valid.configuration" parent="maya_valid.menu_root"/>
+    
+    <!-- menú convalidaciones -->
+    <menuitem name="Departamentos" id="maya_core.school_departament" parent="maya_core.school"
+              action="maya_core.action_departament" sequence="1"/>
+    
+    <!-- Menu Configuración -->
+    <menuitem name="General" id="maya_valid.settings" parent="maya_valid.configuration"
+              action="maya_valid.action_config_settings"/>
+  </data>
+</odoo>
