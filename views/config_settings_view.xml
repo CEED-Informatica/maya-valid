@@ -1,0 +1,30 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="maya_valid.config_settings_view_form">
+      <field name="name">Configuración Maya</field>
+      <field name="model">res.config.settings</field>
+      
+      <field name="inherit_id" ref="base.res_config_settings_view_form" /> 
+      <field name="arch" type="xml">
+      
+        <xpath expr="//div[hasclass('settings')]" position="inside">  
+          <div class="app_settings_block" data-string="MayaValid" id="Maya-valid" string="Maya | Convalidaciones"
+          data-key="maya-valid.action_config_settings">
+            <h2>Convalidaciones</h2>
+            <div class="row mt16 o_settings_container" name="maya_validations_setting_container">
+              <div class="col-12 col-lg-6 o_setting_box" title="Carpeta convalidaciones">
+                <div class="o_setting_right_pane">
+                 <span class="o_form_label">Carpeta</span>
+                 <div class="text-muted">Ruta de almacenamiento de convalidaciones</div>
+                 <div class="text-muted content-group mt8">
+                   <field name="validations_path" class="text-center oe_inline" style="width: 100% !important"/>
+                 </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </xpath>
+      </field>
+    </record>  
+  </data>
+</odoo>

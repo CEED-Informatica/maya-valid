@@ -38,8 +38,9 @@
         'security/ir.model.access.csv',
         # vistas
         'views/views.xml',
+        'views/config_settings_view.xml',
         # datos de modelos
-        
+        'data/config/config_data.xml',
         # reports
         
     ],
