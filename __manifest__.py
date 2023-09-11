@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Maya | Comvalidaciones",
+    'name': "Maya | Convalidaciones",
     'version': '0.1.0a',
 
     'summary': """
@@ -34,6 +34,7 @@
     # always loaded
     'data': [
         # seguridad
+        'security/security_groups.xml',
         'security/ir.model.access.csv',
         # vistas
         'views/views.xml',
