@@ -1,6 +1,141 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="maya_valid.validation_tree">
+      <field name="name">Lista de convalidaciones/aprobados con anterioridad solicitados</field>
+      <field name="model">maya_valid.validation</field>
+      <field name="arch" type="xml">
+        <tree banner_route="/validation/validation_banner">
+          <field name="course_abbr"/>
+          <field name="student_info"/>
+          <field name="validation_subjects_info"/>
+          <field name="state"/>
+          <field name="situation" decoration-warning="situation == '3'" decoration-danger="situation == '4'"/>
+          <field name="correction_date"/>
+          <field name="correction_date_end" widget="remaining_days"/>
+          <field name="correction_reason"/>
+        </tree>
+      </field>
+    </record>
+  
+    <record model="ir.ui.view" id="maya_valid.validation_form">
+      <field name="name">validation.form.view</field>
+      <field name="model">maya_valid.validation</field>
+      <field name="arch" type="xml">
+        <form>
+          <xpath expr="//style" position="after">
+            <link rel="stylesheet" href="/maya_valid/static/css/maya_valid_styles.css"/>
+          </xpath> 
+          <group col='2'>
+            <group>
+              <field name="student_surname"/>
+              <field name="student_nia"/>
+            </group>
+            <group>
+              <field name="student_name"/>
+              <!-- no quiero que aparezca un enlace --> 
+              <field name="course_id" options="{'no_open': True}" readonly="1" />
+            </group>
+          </group>
+          <group col='3'>            
+            <group>      
+              <button name="download_validation_action" icon="fa-download" 
+                string="Descarga documentación" class="oe_highlight"
+                type="object"/>
+            </group>
+            <group>  
+              <field name="documentation_filename" />
+              <field name="attempt_number"/>
+            </group>      
+            <group>
+              <field name="state"/>
+              <field name="situation" decoration-warning="situation == '3'"/>
+            </group>
+          </group>
+          <group>
+            <field name="info" class="info"
+              attrs="{'invisible': [('info','=', '')] }" />
+          </group>
+          <!-- tiene que aparecer en al vista para que pueda trabajar con él en las dos
+               visualizaciones parciales que se hacen a partir de ella.
+               Para que no aparezca ponemos su display a none (hacerlo con attr 
+               implica que no se envia al cliente)   -->
+          <field name="validation_subjects_ids" style="display: none"/>
+          <field name="is_state_read_only" style="display: none"/>
+          <group> <!-- se incluyen dentro de un grupo para que aparezca el texto-->
+            <field name="validation_subjects_not_for_correction_ids">
+              <tree editable="top">
+                <field name="subject_id" options="{'no_open': True}" readonly="1"/>
+                <field name="is_read_only" string="Bloqueada" 
+                   attrs="{'column_invisible': [
+                                      '&amp;',
+                                      '!', ('parent.situation', '=', '5'),
+                                      '!','&amp;',('parent.state', '=', '2'), ('parent.situation', '=', '2')]}"/>
+                <field name="validation_type" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+                <field name="accepted" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+                <field name="mark" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+                <field name="state" attrs="{'readonly':[('is_read_only','=',True)],
+                                            'column_invisible': [('parent.is_state_read_only', '=', True)]}"/>
+                <field name="state_read_only" attrs="{ 'readonly': True,
+                                            'column_invisible': [('parent.is_state_read_only', '=', False)]}"/>
+
+                <field name="validation_reason" attrs="{'readonly':[('is_read_only','=',True)]}" />
+                <field name="comments" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+              </tree>
+            </field>
+            <field name="validation_subjects_for_correction_ids"> 
+              <!-- Quiero que los campos a mostrar sean diferentes a los de la vista tree del modelo validation_subject
+                   así que redefindo de manera local la vista -->
+              <tree editable="top"> 
+                <field name="subject_id" options="{'no_open': True}" readonly="1"/>
+                <field name="is_read_only" string="Bloqueada" 
+                   attrs="{'column_invisible': [
+                                      '&amp;',
+                                      '!', ('parent.situation', '=', '5'),
+                                      '!','&amp;',('parent.state', '=', '2'), ('parent.situation', '=', '2')]}"/>
+                <field name="validation_type" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+                <field name="state" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+                <field name="correction_reason" attrs="{'readonly':[('is_read_only','=',True)]}"/>
+              </tree>
+            </field>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="maya_valid.validation_subject_tree">
+      <field name="name">Lista de convalidaciones/aprobados con anterioridad solicitados</field>
+      <field name="model">maya_valid.validation_subject</field>
+      <field name="arch" type="xml">
+        <tree editable="top">
+          <field name="subject_id" options="{'no_open': True}" readonly="1"/>
+          <field name="validation_type" />
+          <field name="is_read_only" invisible="0"/>
+          <field name="accepted"/>
+          <field name="mark"/>
+          <field name="state"/>
+          <field name="validation_reason"/>
+          <field name="correction_reason"/>
+          <field name="comments"/>
+        </tree>
+      </field>
+    </record>
+
+   <!-- actions opening views on models -->
+   <record model="ir.actions.act_window" id="maya_valid.action_validation">
+      <field name="name">Convalidaciones</field>
+      <field name="res_model">maya_valid.validation</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">Todavía no hay convalidaciones pendientes</p>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="maya_valid.action_validation_subject">
+      <field name="name">Módulos a convalidar por</field>
+      <field name="res_model">maya_valid.validation_subject</field>
+      <field name="view_mode">tree</field>
+    </record>
 
     <record model="ir.actions.act_window" id="maya_valid.action_config_settings">
       <field name="name">Configuración</field>
@@ -14,15 +149,15 @@
     <menuitem name="Maya | Convalidaciones" id="maya_valid.menu_root"/>
 
     <!-- menu categories -->
-    <menuitem name="Convalidaciones" id="maya_valid.school" parent="maya_valid.menu_root"/>
-    <menuitem name="Configuración" id="maya_valid.configuration" parent="maya_valid.menu_root"/>
+    <menuitem name="Convalidaciones" id="maya_valid.menu_validations_l0" parent="maya_valid.menu_root"/>
+    <menuitem name="Configuración" id="maya_valid.menu_configuration" parent="maya_valid.menu_root"/>
     
     <!-- menú convalidaciones -->
-    <menuitem name="Departamentos" id="maya_core.school_departament" parent="maya_core.school"
-              action="maya_core.action_departament" sequence="1"/>
+    <menuitem name="Convalidaciones" id="maya_core.menu_validations" parent="maya_valid.menu_validations_l0"
+              action="maya_valid.action_validation"/>
     
     <!-- Menu Configuración -->
-    <menuitem name="General" id="maya_valid.settings" parent="maya_valid.configuration"
+    <menuitem name="General" id="maya_valid.menu_settings" parent="maya_valid.menu_configuration"
               action="maya_valid.action_config_settings"/>
   </data>
 </odoo>

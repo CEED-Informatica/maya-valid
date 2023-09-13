@@ -36,6 +36,7 @@
         # seguridad
         'security/security_groups.xml',
         'security/ir.model.access.csv',
+        'security/validation_access.xml',   # politicas de acceso a convalidaciones (reescribe las anteriores)
         # vistas
         'views/views.xml',
         'views/config_settings_view.xml',
