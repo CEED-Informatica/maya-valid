@@ -39,6 +39,7 @@
         'security/validation_access.xml',   # politicas de acceso a convalidaciones (reescribe las anteriores)
         # vistas
         'views/views.xml',
+        'views/templates.xml',
         'views/config_settings_view.xml',
         # datos de modelos
         'data/config/config_data.xml',
