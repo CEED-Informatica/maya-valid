@@ -43,6 +43,7 @@
         'views/config_settings_view.xml',
         # datos de modelos
         'data/config/config_data.xml',
+        'data/roles/validations.xml',
         'data/registered_cron_jobs.xml',
         # reports
         
