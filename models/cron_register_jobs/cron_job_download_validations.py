@@ -20,7 +20,7 @@ from ...support import constants
 _logger = logging.getLogger(__name__)
 
 class CronJobDownloadValidations(models.TransientModel):
-  _name = 'maya_core.cron_job_download_validations'
+  _name = 'maya_valid.cron_job_download_validations'
 
   @api.model
   def cron_download_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id):

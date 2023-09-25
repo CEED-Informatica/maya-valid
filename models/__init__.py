@@ -2,3 +2,4 @@
 from . import config_settings
 from . import validation
 from . import validation_subject
+from . import cron_register_jobs
