@@ -9,11 +9,15 @@ import logging
 from ....maya_core.support.maya_moodleteacher.maya_moodle_connection import MayaMoodleConnection
 from ....maya_core.support.maya_moodleteacher.maya_moodle_assigments import MayaMoodleAssignments
 from ....maya_core.support.maya_moodleteacher.maya_moodle_user import MayaMoodleUser
+from ....maya_core.support.maya_moodleteacher.maya_moodle_user import MayaMoodleUsers
+
+from ....maya_core.models.cron_register_jobs.cron_job_enrol_users import CronJobEnrolUsers
 
 from ....maya_core.support.maya_logger.exceptions import MayaException
 
 from ....maya_core.support.helper import create_HTML_list_from_list
 from ....maya_core.support.helper import get_data_from_pdf
+from ....maya_core.support.helper import is_set_flag,set_flag
 
 from ...support import constants
 
@@ -21,6 +25,48 @@ _logger = logging.getLogger(__name__)
 
 class CronJobDownloadValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_download_validations'
+
+  def _assigns_end_date_validation_period(self, conn, validation_classroom_id, subject_id, course_id, current_school_year):
+    """
+    Asignación de la fecha fin de plazo del periodo de convalidaciones
+    Se actualiza la fecha de todos los participantes en caso de que aún no la
+    tengan asignada.
+
+    Devuelve un array de tuplas (moodle_user_id, nueva fecha)
+    """
+
+    users = MayaMoodleUsers.from_course(conn, validation_classroom_id, only_students = True)
+
+    users_to_change_due_date = []
+    today = date.today()
+
+    for user in users:
+      a_user = CronJobEnrolUsers.enrol_student(self,user, subject_id, course_id)
+
+      subject_student = self.env['maya_core.subject_student_rel']\
+        .search([('subject_id', '=', subject_id),('student_id', '=', a_user.id),('course_id', '=', course_id)])
+      
+      # aún no tiene abierto el periodo de convalidaciones
+      if not is_set_flag(subject_student[0].status_flags,constants.VALIDATION_PERIOD_OPEN):
+        # asigno un periodo de 30 dias de plazo
+        if current_school_year.date_init_lective > today: # el proceso ha ocurrido antes de abrir las aulas virtuales
+          new_due_date = current_school_year.date_init_lective + timedelta(days = 30)
+        else:
+          new_due_date = today + timedelta(days = 30)
+          
+        users_to_change_due_date.append((user.id_,int(datetime(year = new_due_date.year, 
+                     month = new_due_date.month,
+                     day = new_due_date.day,
+                     hour = 21,
+                     minute = 59,
+                     second = 59).timestamp())))
+        
+        # indicamos que ese usuario ya tiene el periodo abierto
+        subject_student[0].write({
+          'status_flags': set_flag(subject_student.status_flags,constants.VALIDATION_PERIOD_OPEN)
+        })
+     
+    return users_to_change_due_date
 
   @api.model
   def cron_download_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id):
@@ -45,10 +91,10 @@ class CronJobDownloadValidations(models.TransientModel):
         
     try:
       conn = MayaMoodleConnection( 
-        moodle_user = self.env['ir.config_parameter'].get_param('maya_core.moodle_user'), 
+        user = self.env['ir.config_parameter'].get_param('maya_core.moodle_user'), 
         moodle_host = self.env['ir.config_parameter'].get_param('maya_core.moodle_url')) 
-    except Exception:
-      raise Exception('No es posible realizar la conexión con Moodle')
+    except Exception as e:
+      raise Exception('No es posible realizar la conexión con Moodle' + e)
     
     current_sy = (self.env['maya_core.school_year'].search([('state', '=', 1)])) # curso escolar actual  
 
@@ -143,7 +189,7 @@ class CronJobDownloadValidations(models.TransientModel):
       new_timestamp =  int(datetime(year = new_due_date.year, 
                          month = new_due_date.month,
                          day = new_due_date.day,
-                         hour = 23,
+                         hour = 21,
                          minute = 59,
                          second = 59).timestamp())     
       
