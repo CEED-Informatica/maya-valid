@@ -155,13 +155,13 @@ class CronJobDownloadValidations(models.TransientModel):
 
       _logger.info("Entrega usuario moodle {}".format(submission.userid))   
       user = MayaMoodleUser.from_userid(conn, submission.userid)   # usuario moodle
-      a_user =  self._enrol_student(user, subject_id, course_id)  # usuario maya
+      a_user =  CronJobEnrolUsers.enrol_student(self, user, subject_id, course_id)  # usuario maya
   
       # obtención de la convalidación 
       validation_list = [ val for val in a_user.validations_ids if val.course_id.id == course_id]
       
       if len(validation_list) == 0:
-        validation = self.env['maya_core.validation'].create([
+        validation = self.env['maya_valid.validation'].create([
             { 'student_id': a_user.id,
               'course_id': course_id,
               'attempt_number': submission.attemptnumber + 1,
