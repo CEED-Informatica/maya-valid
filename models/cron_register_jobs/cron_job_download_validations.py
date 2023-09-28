@@ -4,6 +4,8 @@ from odoo import models, api
 import os
 from datetime import date, timedelta, datetime
 import logging
+import pycurl,json
+from io import BytesIO
 
 # Moodle
 from ....maya_core.support.maya_moodleteacher.maya_moodle_connection import MayaMoodleConnection
@@ -316,7 +318,30 @@ class CronJobDownloadValidations(models.TransientModel):
         submission.set_extension_due_date(to = new_timestamp)
         continue
 
-      # TODO comprobación de firma digital
+      # Comprobación de firma digital
+      buffer = BytesIO()
+      pycurl_connex = pycurl.Curl()
+      pycurl_connex.setopt(pycurl_connex.URL, 'http://pdf-signature-validator:80/verify_signature')
+      pycurl_connex.setopt(pycurl_connex.POST, 1)
+      pycurl_connex.setopt(pycurl_connex.HTTPPOST, 
+                           [("file", (pycurl_connex.FORM_FILE, 
+                                      os.path.join(path_user_submission, annex_file[0])))])
+      pycurl_connex.setopt(pycurl_connex.WRITEDATA, buffer)
+      
+      pycurl_connex.perform()
+      pycurl_connex.close()
+
+      response_curl = buffer.getvalue().decode('utf-8')
+      response_curl_data = json.loads(response_curl)
+
+      validation.sign_data = response_curl
+      if 'error' in response_curl_data:
+        if response_curl_data['error'] == 'PDFSIG_ERROR':
+          _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}')      
+          submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
+          submission.set_extension_due_date(to = new_timestamp)
+          continue
+    
 
       # obtengo el NIA del formulario
       # aunque el login del alumno es su NIA, a dia de hoy Aules no me lo proporciona

@@ -37,13 +37,17 @@
               <field name="course_id" options="{'no_open': True}" readonly="1" />
             </group>
           </group>
-          <group col='3'>            
+          <group col='4'>            
             <group>      
               <button name="download_validation_action" icon="fa-download" 
                 string="Descarga documentación" class="oe_highlight"
                 type="object"/>
             </group>
-            <group>  
+             <group> 
+              <field name="sign_info" decoration-success="sign_state == True" decoration-danger="sign_state == False"/>
+              <field name="sign_state" attrs="{'invisible': 1 }"/>
+            </group> 
+            <group>
               <field name="documentation_filename" />
               <field name="attempt_number"/>
             </group>      
@@ -56,7 +60,7 @@
             <field name="info" class="info"
               attrs="{'invisible': [('info','=', '')] }" />
           </group>
-          <!-- tiene que aparecer en al vista para que pueda trabajar con él en las dos
+          <!-- tiene que aparecer en la vista para que pueda trabajar con él en las dos
                visualizaciones parciales que se hacen a partir de ella.
                Para que no aparezca ponemos su display a none (hacerlo con attr 
                implica que no se envia al cliente)   -->

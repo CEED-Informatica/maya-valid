@@ -9,7 +9,7 @@ from lxml import etree
 import datetime
 import logging
 import base64
-import os
+import os, json
 
 from ...maya_core.support.helper import create_HTML_list_from_list
 from ...maya_core.support.maya_logger.exceptions import MayaException
@@ -119,6 +119,10 @@ class Validation(models.Model):
     )
   
   info = fields.Text(string = "Observaciones", compute = '_compute_info')
+
+  sign_data = fields.Text(string = "Firma electrónica datos")
+  sign_info = fields.Text(string = "Firma electrónica", compute = '_compute_sign_info')
+  sign_state = fields.Boolean(compute = '_compute_sign_info')
 
   def _default_locked(self):
     if (self.state == '2' and self.situation == '2') or self.situation == '5': 
@@ -309,7 +313,31 @@ class Validation(models.Model):
        (self.env.user.has_group('maya_core.group_ADMIN') and int(self.state) != 14) or \
        (self.env.user.has_group('maya_core.group_MNGT_FP') and int(self.state) < 11) or \
        (self.env.user.has_group('maya_valid.group_VALID') and int(self.state) < 6):
-      self.info = ''  
+      self.info = ''
+
+  @api.depends('sign_data')
+  def _compute_sign_info(self):
+    """
+    Monta la cadena que se va a mostrar con información sobre la firma
+    """
+    self.ensure_one()
+
+    if self.sign_data == False:
+      self.sign_info = ''
+      self.sign_state = True
+      return
+    
+    sign_data_object = json.loads(self.sign_data)
+    if 'success' in sign_data_object:  
+      if sign_data_object['success'] == True:
+        self.sign_info = 'Firma correcta: ' + sign_data_object['CN']
+        self.sign_state = True
+      else:
+        self.sign_info = 'Firma no válida'
+        self.sign_state = False
+    else:
+      self.sign_state = False
+  
    
   def download_validation_action(self):
     """
