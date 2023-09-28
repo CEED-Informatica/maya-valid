@@ -336,11 +336,16 @@ class CronJobDownloadValidations(models.TransientModel):
 
       validation.sign_data = response_curl
       if 'error' in response_curl_data:
-        if response_curl_data['error'] == 'PDFSIG_ERROR':
-          _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}')      
-          submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
-          submission.set_extension_due_date(to = new_timestamp)
-          continue
+        if response_curl_data['error'] == 'PDFSIG_ERROR' or \
+           response_curl_data['error'] == 'NOT_SIGNED' or \
+           response_curl_data['error'] == 'EXPIRED_CERTIFICATE' or \
+           response_curl_data['error'] == 'REVOKED_CERTIFICATE' or \
+           response_curl_data['error'] == 'NOT_VALID_CERTIFICATE':
+           # response_curl_data['error'] == 'INVALID_SIGNATURE'
+            _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}. Error: {response_curl_data["error_message"]} ')
+            submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF', response_curl_data['error_message']))
+            submission.set_extension_due_date(to = new_timestamp)
+            continue
     
 
       # obtengo el NIA del formulario
