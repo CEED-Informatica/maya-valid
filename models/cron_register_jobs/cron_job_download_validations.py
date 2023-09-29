@@ -48,6 +48,10 @@ class CronJobDownloadValidations(models.TransientModel):
       subject_student = self.env['maya_core.subject_student_rel']\
         .search([('subject_id', '=', subject_id),('student_id', '=', a_user.id),('course_id', '=', course_id)])
       
+      if len(subject_student) == 0:
+        _logger.warning('Incongruencia en la matricula. En el aula de Moodle de módulo (id Maya: {subject_id}) hay matriculado un alumno (id Maya: {a_user.id}) que no lo está en Maya')
+        continue
+
       # aún no tiene abierto el periodo de convalidaciones
       if not is_set_flag(subject_student[0].status_flags,constants.VALIDATION_PERIOD_OPEN):
         # asigno un periodo de 30 dias de plazo
