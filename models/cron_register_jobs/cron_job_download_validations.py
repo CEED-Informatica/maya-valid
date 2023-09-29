@@ -343,7 +343,7 @@ class CronJobDownloadValidations(models.TransientModel):
            response_curl_data['error'] == 'NOT_VALID_CERTIFICATE':
            # response_curl_data['error'] == 'INVALID_SIGNATURE'
             _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}. Error: {response_curl_data["error_message"]} ')
-            submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF', response_curl_data['error_message']))
+            submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
             submission.set_extension_due_date(to = new_timestamp)
             continue
     
