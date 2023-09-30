@@ -256,7 +256,13 @@ class CronJobDownloadValidations(models.TransientModel):
       # más de un anexo (o ninguno)
       if len(annex_file) != 1:
         _logger.error("Es necesario que haya un (y sólo un) fichero llamado anexo o annex. Estudiante moodle id: {} {}".format(submission.userid, len(annex_file)))   
-        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('NNX'))
+        submission.save_grade(3,
+                              new_attempt = True, 
+                              feedback = validation.create_correction('NNX', 
+                                                                         create_HTML_list_from_list( 
+                                                                           ['No ha enviado en el zip una carpeta con los ficheros. En el zip no puede haber carpetas, solo uno o más ficheros pdf',
+                                                                            'Uno de los ficheros (y sólo 1) tiene en su nombre la palabra anexo o annex'
+                                                                         ], 'Compruebe que:')))
         submission.set_extension_due_date(to = new_timestamp)
         continue
   
