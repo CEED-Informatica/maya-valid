@@ -20,6 +20,7 @@ from ....maya_core.support.maya_logger.exceptions import MayaException
 from ....maya_core.support.helper import create_HTML_list_from_list
 from ....maya_core.support.helper import get_data_from_pdf
 from ....maya_core.support.helper import is_set_flag,set_flag
+from ...support.fitz_pdf_templates import PDF_NOFIELDS_FITZ_VALIDATION
 
 from ...support import constants
 
@@ -267,7 +268,8 @@ class CronJobDownloadValidations(models.TransientModel):
         continue
   
       # datos obligatorios rellenados  
-      fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]))
+      fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]),
+                                 PDF_NOFIELDS_FITZ_VALIDATION)
       _logger.info(fields)
 
       missing_fields = []
