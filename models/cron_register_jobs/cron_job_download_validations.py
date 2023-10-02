@@ -6,6 +6,7 @@ from datetime import date, timedelta, datetime
 import logging
 import pycurl,json
 from io import BytesIO
+from unicodedata import normalize
 
 # Moodle
 from ....maya_core.support.maya_moodleteacher.maya_moodle_connection import MayaMoodleConnection
@@ -225,17 +226,20 @@ class CronJobDownloadValidations(models.TransientModel):
         submission.attemptnumber + 1,
         user.lastname.upper() if user.lastname is not None else 'SIN-APELLIDOS', 
         user.firstname.upper() if user.firstname is not None else 'SIN-NOMBRE')
+      
+      filename_nor = normalize('NFKD',filename.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
 
       # creación del directorio para almacenarlo
-      path_user = os.path.join(path, foldername, '') 
-      if not os.path.exists(path_user):  
-        os.makedirs(path_user)
+      path_user = os.path.join(path, foldername, '')
+      path_user_nor = normalize('NFKD',path_user.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+      if not os.path.exists(path_user_nor):  
+        os.makedirs(path_user_nor)
 
       submission.files[0].from_url(conn = conn, url = submission.files[0].url)
-      submission.files[0].save_as(path_user, filename + '.zip')
+      submission.files[0].save_as(path_user_nor, filename_nor + '.zip')
       
       # creación del directorio para descomprimirlo
-      path_user_submission = os.path.join(path_user, filename, '') 
+      path_user_submission = os.path.join(path_user_nor, filename_nor, '') 
       if not os.path.exists(path_user_submission):
         os.makedirs(path_user_submission)
 
@@ -244,7 +248,8 @@ class CronJobDownloadValidations(models.TransientModel):
 
       files_unzip = []
       for file in os.listdir(path_user_submission):
-        os.rename(os.path.join(path_user_submission, file), os.path.join(path_user_submission, file.upper()))
+        file_nor = normalize('NFKD',file.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+        os.rename(os.path.join(path_user_submission, file), os.path.join(path_user_submission, file_nor.upper()))
 
       for file in os.listdir(path_user_submission):
         if os.path.isfile(os.path.join(path_user_submission, file)):
