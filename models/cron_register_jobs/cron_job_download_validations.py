@@ -456,6 +456,6 @@ class CronJobDownloadValidations(models.TransientModel):
         submission.save_grade(2)
       # ha pasado los filtros iniciales => cambio el estado a en proceso
       else:
-        submission.save_grade(2)
+        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>Pasa a estado de <strong>en proceso</strong>.</p>')
       
     return
