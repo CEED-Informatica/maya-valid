@@ -305,9 +305,15 @@ class CronJobDownloadValidations(models.TransientModel):
 
       if len(missing_fields) > 0:
         _logger.error('Faltan campos obligatorios por definir en el pdf. Estudiante moodle id: {} {}'.format(submission.userid, missing_fields))
+
+        appendix = ''
+        if len(missing_fields) > 5:
+          appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado en el aula virtual y asegúrese que no envía una versión escaneada/fotografiada.</p>'
+        
         submission.save_grade(3, new_attempt = True, 
                                  feedback = validation.create_correction('ANC', 
-                                                                         create_HTML_list_from_list(missing_fields, 'Campos a revisar:')))
+                                                                         create_HTML_list_from_list(missing_fields, 'Campos a revisar:') + 
+                                                                         appendix))
         submission.set_extension_due_date(to = new_timestamp)
         continue
 
@@ -444,7 +450,7 @@ class CronJobDownloadValidations(models.TransientModel):
          validation.correction_reason != 'INT' and\
          validation.correction_reason[:3] != 'ERR' and \
         new_documentation:
-        submission.save_grade(2)
+        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>Pasa a estado de <strong>en proceso</strong>.</p>'))
         validation.write({ 
           'correction_reason': False,
           'state': '1',
