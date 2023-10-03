@@ -111,7 +111,7 @@
       <field name="name">Lista de convalidaciones/aprobados con anterioridad solicitados</field>
       <field name="model">maya_valid.validation_subject</field>
       <field name="arch" type="xml">
-        <tree editable="top">
+        <tree editable="top" limit="20">
           <field name="subject_id" options="{'no_open': True}" readonly="1"/>
           <field name="validation_type" />
           <field name="is_read_only" invisible="0"/>
