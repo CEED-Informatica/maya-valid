@@ -450,7 +450,7 @@ class CronJobDownloadValidations(models.TransientModel):
          validation.correction_reason != 'INT' and\
          validation.correction_reason[:3] != 'ERR' and \
         new_documentation:
-        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>Pasa a estado de <strong>en proceso</strong>.</p>'))
+        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>Pasa a estado de <strong>en proceso</strong>.</p>')
         validation.write({ 
           'correction_reason': False,
           'state': '1',
