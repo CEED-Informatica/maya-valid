@@ -5,7 +5,7 @@
       <field name="name">Lista de convalidaciones/aprobados con anterioridad solicitados</field>
       <field name="model">maya_valid.validation</field>
       <field name="arch" type="xml">
-        <tree banner_route="/validation/validation_banner">
+        <tree banner_route="/validation/validation_banner" limit="20">
           <field name="course_abbr"/>
           <field name="student_info"/>
           <field name="validation_subjects_info"/>
