@@ -3,13 +3,14 @@
 from odoo import api, models, fields
 from odoo.exceptions import ValidationError
 
-from odoo.exceptions import AccessDenied
-from lxml import etree 
+from odoo.exceptions import AccessDenied 
 
 import datetime
 import logging
 import base64
 import os, json
+
+from unicodedata import normalize
 
 from ...maya_core.support.helper import create_HTML_list_from_list
 from ...maya_core.support.maya_logger.exceptions import MayaException
@@ -348,7 +349,7 @@ class Validation(models.Model):
     # el acceso a ir.config_parameter sólo es posible desde el administrador. 
     # para que un usuario no admin (por ejemplo un convalidador) pueda acceder a descargar la documuentación
     # se utiliza la función sudo() para saltar los reglas de acceso
-    validations_path = self.env['ir.config_parameter'].sudo().get_param('atenea.validations_path') or None
+    validations_path = self.env['ir.config_parameter'].sudo().get_param('maya_valid.validations_path') or None
     if validations_path == None:
       _logger.error('La ruta de almacenamiento de convalidaciones no está definida')
       return
@@ -378,8 +379,11 @@ class Validation(models.Model):
         self.attempt_number,
         self.student_surname.upper() if self.student_surname is not None else 'SIN-APELLIDOS', 
         self.student_name.upper() if self.student_name is not None else 'SIN-NOMBRE')
+    
+    foldername_nor = normalize('NFKD',filename.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+    filename_nor = normalize('NFKD',filename.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
 
-    documentation_filename = f'{path}/{foldername}/{filename}.zip'
+    documentation_filename = f'{path}/{foldername_nor}/{filename_nor}.zip'
     with open(documentation_filename, 'rb') as f:
       file_bytes = f.read()
       encode_data = base64.b64encode(file_bytes)
