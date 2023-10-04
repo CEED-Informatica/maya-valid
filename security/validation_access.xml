@@ -161,7 +161,7 @@
       <field name="name">Acceso de los validadores solo a las convalidaciones de sus ciclos</field>
       <field name="model_id" ref="model_maya_valid_validation"/>
       <field name="groups" eval="[(4, ref('maya_valid.group_VALID'))]"/>
-      <field name="domain_force">[('course_abbr','in',[rol.course_id.abbr for rol in user.employee_id.roles_ids if rol.course_id.abbr is not False])]</field>
+      <field name="domain_force">[('course_abbr','in',[rol.course_id.abbr for rol in user.maya_employee_id.roles_ids if rol.course_id.abbr is not False])]</field>
     </record>
 
     <record id="maya_valid.validation_administration_rol_rule" model="ir.rule">
