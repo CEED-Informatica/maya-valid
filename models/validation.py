@@ -380,20 +380,42 @@ class Validation(models.Model):
         self.student_surname.upper() if self.student_surname is not None else 'SIN-APELLIDOS', 
         self.student_name.upper() if self.student_name is not None else 'SIN-NOMBRE')
     
-    foldername_nor = normalize('NFKD',filename.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+    foldername_nor = normalize('NFKD',foldername.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
     filename_nor = normalize('NFKD',filename.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
 
     documentation_filename = f'{path}/{foldername_nor}/{filename_nor}.zip'
-    with open(documentation_filename, 'rb') as f:
-      file_bytes = f.read()
-      encode_data = base64.b64encode(file_bytes)
 
+    try:
+      with open(documentation_filename, 'rb') as f:
+        file_bytes = f.read()
+        encode_data = base64.b64encode(file_bytes)
+    except Exception as e:
+      _logger.error('Error descargando el fichero:' + str(e))
+      return {}
+      """ return { 
+            'warning': {
+              'title': "¡Atención!", 
+              'message': "Esta convalidación ya ha sido notificada al estudiante. Cambiar su contenido implica la notificación del cambio en cuanto se realice la grabación"
+              }} """
+      """ return {
+        'type': 'ir.actions.act_window',
+        'target': 'new',
+        'context': {
+          "warning": {
+            'title': 'Atención',
+            'message': 'El fichero no puede ser descargado: '
+          }
+          
+          }
+        },
+      """
+  
     self.documentation = encode_data
 
     return {
       'type': 'ir.actions.act_url',
       'url': 'web/content?model=maya_valid.validation&id=%s&field=documentation&filename=%s.zip&download=true' % 
-        (self.id, filename.replace(' ','%20'))
+        (self.id, filename_nor.replace(' ','%20'))
     }
 
   @api.depends('validation_subjects_ids')
