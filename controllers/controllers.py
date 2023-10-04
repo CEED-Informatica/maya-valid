@@ -29,9 +29,7 @@ class ValidationController(http.Controller):
     if is_root:
       courses = [course.abbr for course in request.env['maya_core.course'].search([])]
     else:
-      courses = [rol.course_id.abbr for rol in user.employee_id.roles_ids if rol.course_id.abbr is not False]
-
-
+      courses = [rol.course_id.abbr for rol in user.maya_employee_id.roles_ids if rol.course_id.abbr is not False]
 
     if len(courses)>0:
       user_num_valid = request.env['maya_valid.validation_subject'].search_count([('validation_id.course_id.abbr', 'in', courses)])
