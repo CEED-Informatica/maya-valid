@@ -9,10 +9,10 @@ class ValidationController(http.Controller):
   def get_banner_data(self, **kw):
     """
     Ruta para mostar en banner en las convalidaciones
-    No se permite la llamada directa desde el navegador ya que el tipo es json, np http
+    No se permite la llamada directa desde el navegador ya que el tipo es json, no http
     """
     user =  request.env.user
-    is_coord = is_validator= is_root = is_admin = False
+    is_coord = is_validator = is_root = is_admin = False
      
     if user.has_group('maya_valid.group_VALID'):
       is_validator = True
@@ -51,7 +51,6 @@ class ValidationController(http.Controller):
     # el dominio se define mediante notación polaca
     num_finished = request.env['maya_valid.validation_subject'].search_count(['|', ('state','=','6'), ('state','=','7')])
     num_rejected = request.env['maya_valid.validation_subject'].search_count(['&', ('state','>=','3'), ('accepted','=','2')])
-
 
     return {
       # hay que prefijar con el nombre del módulo, aunque el id del template no lo lleva
