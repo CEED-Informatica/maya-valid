@@ -75,8 +75,9 @@ class ValidationSubject(models.Model):
   
   validation_reason = fields.Selection([
       ('FOLRL', 'Ciclo LOGSE + RL (>30h)'),
-      ('B2', 'Título B2'),
-      ('AA', 'Común con otro ciclo formativo'),
+      ('B2', 'Título B2 o superior'),
+      ('AA', 'Común con otro ciclo formativo (AA)'),
+      ('OCF', 'Otro módulo(s) de Ciclo Formativo'),
       ], string ='Razón de la convalidación', 
       help = "Permite indicar el motivo por el que acepta o deniega la convalidación")
   
@@ -86,6 +87,7 @@ class ValidationSubject(models.Model):
     ('SNF', 'Documento no firmado digitalmente'),
     ('RL', 'No se aporta curso de riesgo laborales > 30h'),
     ('EXP', 'No se aporta expediente académico'),
+    ('TLE', 'No se aporta titulación lengua extranjera'),
     ], string ='Razón de la subsanación',
     help = "Permite indicar el motivo por el que se solicita la subsanación")
   
