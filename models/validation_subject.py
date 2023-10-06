@@ -218,7 +218,7 @@ class ValidationSubject(models.Model):
       vals['end_date_id'] = False
 
     today = date.today()
-    current_employee = self.env.user.employee_id
+    current_employee = self.env.user.maya_employee_id
     if int(state) == 3:
       vals['validator_id'] = current_employee
       vals['validation_date_id'] = today
