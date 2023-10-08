@@ -101,7 +101,7 @@ class Validation(models.Model):
     ('NNX', 'No se encuentra un fichero llamado anexo o hay más de uno.'),
     ('ANC', 'Anexo no cumplimentado correctamente. Campos obligatorios no rellenados.'),
     ('ANP', 'Anexo no cumplimentado correctamente. Tipo (convalidación/aprobado con anterioridad) no indicado.'),
-    ('SNF', 'Documento no firmado digitalmente'),
+    ('SNF', 'Documento no firmado electrónicamente'),
     ('INT', 'Ver convalidaciones módulos'), # subsanaciones específicas de módulos
     ('ERR1', 'Error al notificar una subsanación que no era'), 
     ('ERR2', 'Error al notificar los detalles de una subsanación'), 
