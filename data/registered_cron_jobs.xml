@@ -11,5 +11,16 @@
       <field name="nextcall_day">school_year.date_init</field>
       <field name="nextcall_hour">23:00:00</field>
     </record>
+
+    <record model="maya_core.cron_register" id="maya_valid.cron_notify_validations">
+      <field name="name">Notificación convalidaciones</field>
+      <field name="key">NOTV</field>
+      <field name="context">FPC</field>
+      <field name="model">cron_job_notify_validations</field>
+      <field name="code">cron_notify_validations</field>
+      <field name="numbercall">1</field>
+      <field name="nextcall_day">school_year.date_init</field>
+      <field name="nextcall_hour">02:00:00</field>
+    </record>
   </data>
 </odoo>
