@@ -392,7 +392,8 @@ class CronJobDownloadValidations(models.TransientModel):
 
         # es el nombre del módulo
         if key.startswith('C_Modulo') and len(key) < 12:
-          code = fields[key][0][:(fields[key][0].find(' -'))]
+          #code = fields[key][0][:(fields[key][0].find(' -'))]
+          code = fields[key][0][:4]
           validation_type = fields[key + 'AACO'][0][:2].lower()
           
           if len(code) == 0:
