@@ -374,7 +374,7 @@ class CronJobDownloadValidations(models.TransientModel):
       # obtengo el NIA del formulario
       # aunque el login del alumno es su NIA, a dia de hoy Aules no me lo proporciona
       a_user.write({
-        'nia': fields['A_NIA'][0]
+        'nia': fields['A_NIA'][0].strip()
       })
 
       # asignacion de módulos a CO/AA
