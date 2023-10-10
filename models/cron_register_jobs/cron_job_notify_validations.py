@@ -50,7 +50,7 @@ class CronJobNotifyValidations(models.TransientModel):
     
     try:
       conn = MayaMoodleConnection( 
-        moodle_user = self.env['ir.config_parameter'].get_param('maya_core.moodle_user'), 
+        user = self.env['ir.config_parameter'].get_param('maya_core.moodle_user'), 
         moodle_host = self.env['ir.config_parameter'].get_param('maya_core.moodle_url')) 
     except Exception:
       raise Exception('No es posible realizar la conexión con Moodle')
