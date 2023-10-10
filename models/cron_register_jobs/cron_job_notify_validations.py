@@ -105,7 +105,9 @@ class CronJobNotifyValidations(models.TransientModel):
 
       # está en estado de subsanación y el alumno no ha sido avisado
       if validation.state == '2' and validation.situation == '1':
-        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('INT'))
+        submission.save_grade(3, new_attempt = True, 
+                                 feedback = validation.create_correction('INT',
+                                                                         'Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre)'))
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
