@@ -77,7 +77,8 @@ class ValidationSubject(models.Model):
       ('FOLRL', 'Ciclo LOGSE + RL (>30h)'),
       ('B2', 'Título B2 o superior'),
       ('AA', 'Común con otro ciclo formativo (AA)'),
-      ('OCF', 'Otro módulo(s) de Ciclo Formativo'),
+      ('OCF', 'Otro(s) módulo(s) de Ciclo Formativo'),
+      ('AUC', 'Aporta todas las Unidades de Competencia'),
       ], string ='Razón de la convalidación', 
       help = "Permite indicar el motivo por el que acepta o deniega la convalidación")
   
@@ -85,7 +86,7 @@ class ValidationSubject(models.Model):
     ('ANC', 'Anexo no cumplimentado correctamente. Campos obligatorios no rellenados.'),
     ('ANP', 'Anexo no cumplimentado correctamente. Tipo (convalidación/aprobado con anterioridad) no indicado.'),
     ('SNF', 'Documento no firmado digitalmente'),
-    ('RL', 'No se aporta curso de riesgo laborales > 30h'),
+    ('RL', 'Ciclo LOGSE: no se aporta curso de riesgo laborales > 30h'),
     ('EXP', 'No se aporta expediente académico'),
     ('TLE', 'No se aporta titulación lengua extranjera'),
     ], string ='Razón de la subsanación',
