@@ -232,6 +232,8 @@ class Validation(models.Model):
     Crea el mensaje de notificación de resolución de la convalidación
     Devuelve la notificación en formato HTML
     """
+    need_table_denied = False
+
     body = '<p>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</p>'
 
     table = '<table><thead><tr><th>Código</th><th>Módulo</th><th>Tipo</th><th>Aceptada</th><th>Calificación</th></tr></thead><tbody>'
@@ -246,15 +248,34 @@ class Validation(models.Model):
         row += f'<td style="text-align: center">{dict(val._fields["mark"].selection).get(val.mark)}</td>'
       else:
         row += '<td></td>'
+        need_table_denied = True
       row += '</tr>'
 
       table += row
 
       val.state = '7'
 
-    table +='</tbody></table>'
+    table += '</tbody></table>'
 
-    feedback = body + table
+    table_denied = ''
+    if need_table_denied:
+      table_denied = '<table><thead><tr><th>Código</th><th>Módulo</th><th>Razón rechazo</th></tr></thead><tbody>'
+
+      for val in self.validation_subjects_ids:
+        if val.accepted == '1':
+          continue
+        
+        row = '<tr>'
+        row += f'<td>{val.subject_id.code}</td>'
+        row += f'<td style="padding-left:1rem">{val.subject_id.name}</td>'
+        row += f'<td style="padding-left:1rem">{val.comments}</td>'
+        row += '</tr>'
+
+        table += row
+
+      table_denied += '</tbody></table>'
+
+    feedback = body + table + table_denied
 
     return feedback
 

@@ -57,7 +57,7 @@ class ValidationSubject(models.Model):
       ('11', 'MH')
       ], string =" Nota")
   
-  comments = fields.Text(string = 'Comentarios',
+  comments = fields.Text(string = 'Comentarios / Razón rechazo',
                          help = 'Ciclo aportado, centro donde se cursó, titulación de inglés aportada...')
   # accepted = fields.Boolean(default = False)
   accepted = fields.Selection([
