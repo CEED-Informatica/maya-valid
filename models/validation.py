@@ -210,8 +210,13 @@ class Validation(models.Model):
     
     # las causas viene definidas en cada uno de los módulos
     if reason in ('INT', 'ERR2'): 
-      val_for_correction = [(dict(val._fields['correction_reason'].selection).get(val.correction_reason)) for val in self.validation_subjects_ids if val.state == '1']
-      body = prebody + create_HTML_list_from_list(val_for_correction, 'No es posible realizar la convalidación solicitada por los siguientes motivos:')
+      val_for_correction = [ '(' + val.subject_id.code + '/' + val.subject_id.abbr + ') ' 
+                            + (dict(val._fields['correction_reason'].selection).get(val.correction_reason)) 
+                            for val in self.validation_subjects_ids if val.state == '1']
+      
+      body = prebody + create_HTML_list_from_list(val_for_correction, 
+                                                  'No es posible realizar la convalidación solicitada por los siguientes motivos:', 
+                                                  ident = False)
     else:
       body = """
           <p>No es posible realizar la convalidación solicitada por los siguientes motivos:</p>
