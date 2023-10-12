@@ -234,9 +234,9 @@ class Validation(models.Model):
     """
     need_table_denied = False
 
-    body = '<p>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</p>'
+    body = '<h6>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</h6>'
 
-    table = '<table><thead><tr><th>Código</th><th>Módulo</th><th>Tipo</th><th>Aceptada</th><th>Calificación</th></tr></thead><tbody>'
+    table = '<br><table class="table table-striped table-sm"><thead><tr><th>Código</th><th>Módulo</th><th>Tipo</th><th>Aceptada</th><th>Calificación</th></tr></thead><tbody>'
     
     for val in self.validation_subjects_ids:
       row = '<tr>'
@@ -259,7 +259,9 @@ class Validation(models.Model):
 
     table_denied = ''
     if need_table_denied:
-      table_denied = '<table><thead><tr><th>Código</th><th>Módulo</th><th>Razón rechazo</th></tr></thead><tbody>'
+
+      table_denied = '<h6>Las causas de los rechazos son:</h6> \
+        <br><table class="table table-striped table-sm"><thead><tr><th>Código</th><th>Módulo</th><th>Razón rechazo</th></tr></thead><tbody>'
 
       for val in self.validation_subjects_ids:
         if val.accepted == '1':
