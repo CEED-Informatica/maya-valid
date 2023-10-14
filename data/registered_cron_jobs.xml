@@ -22,5 +22,16 @@
       <field name="nextcall_day">school_year.date_init</field>
       <field name="nextcall_hour">02:00:00</field>
     </record>
+
+    <record model="maya_core.cron_register" id="maya_valid.cron_check_deadline_validations">
+      <field name="name">Comprobación de fechas límites convalidaciones superadas</field>
+      <field name="key">CHDL</field>
+      <field name="context">FPC</field>
+      <field name="model">cron_job_check_deadline_validations</field>
+      <field name="code">cron_check_deadline_validations</field>
+      <field name="numbercall">1</field>
+      <field name="nextcall_day">school_year.date_init</field>
+      <field name="nextcall_hour">22:45:00</field>
+    </record>
   </data>
 </odoo>

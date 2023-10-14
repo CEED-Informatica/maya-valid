@@ -2,3 +2,4 @@
 
 from . import cron_job_download_validations
 from . import cron_job_notify_validations
+from . import cron_job_check_deadline_validations
