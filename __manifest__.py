@@ -35,6 +35,7 @@
     'data': [
         # seguridad
         'security/security_groups.xml',
+        'security/cron_access.xml',
         'security/ir.model.access.csv',
         'security/validation_access.xml',   # politicas de acceso a convalidaciones (reescribe las anteriores)
         # vistas

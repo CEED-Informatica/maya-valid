@@ -14,13 +14,13 @@ class CronJobCheckDeadlineValidations(models.TransientModel):
     today = date.today()
     validations = self.env['maya_valid.validation'].search([])
 
-    updated_validations = []
+    updated_validations = ''
     for val in validations:
       if val["correction_date_end"] != False and today > val["correction_date_end"]:
         val.write({
           'situation': '4'  
         })
-        updated_validations.append(f'{val["course_abbr"]}/studend_id: {val["student_id"].id}')
+        updated_validations += f'{val["course_abbr"]}/studend_id: {val["student_id"].id},'
 
 
-    _logger.info('Subsanaciones fuera de plazo: ', updated_validations)
+    _logger.info('Subsanaciones fuera de plazo: '+ updated_validations)
