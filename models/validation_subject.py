@@ -89,6 +89,7 @@ class ValidationSubject(models.Model):
     ('RL', 'Ciclo LOGSE: no se aporta curso de riesgo laborales > 30h'),
     ('EXP', 'No se aporta expediente académico'),
     ('TLE', 'No se aporta titulación lengua extranjera'),
+    ('NCO', 'Es necesario aportar certificado del ciclo dónde se curso originalmente'),
     ], string ='Razón de la subsanación',
     help = "Permite indicar el motivo por el que se solicita la subsanación")
   
