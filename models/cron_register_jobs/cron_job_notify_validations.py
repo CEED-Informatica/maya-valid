@@ -135,3 +135,6 @@ class CronJobNotifyValidations(models.TransientModel):
       # está finalizada
       if validation.state == '13':
         submission.save_grade(4, new_attempt = False, feedback = validation.create_finished_notification_message())
+        validation.write({
+          'state': '14'  
+        })

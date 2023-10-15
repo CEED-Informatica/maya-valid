@@ -459,7 +459,7 @@ class Validation(models.Model):
       any_reviewed = any(val.state == '4' for val in record.validation_subjects_ids)
       any_finished = any(val.state == '6' for val in record.validation_subjects_ids)
       all_finished = all(val.state == '6' for val in record.validation_subjects_ids)
-      all_closed = all(val.state == '7' for val in record.validation_subjects_ids)
+      all_closed = all(val.state == '7' for val in record.validation_subjects_ids) or (all_finished and record.state == '14')
 
       # si está ya notificado al estudiante o estaba en subsanación o finalizada o instancia superior
       if record.situation == '2':
@@ -530,13 +530,13 @@ class Validation(models.Model):
         record.correction_date = False
         continue
       
+      if all_closed:
+        record.state = '14'
+        continue
+
       # si todas finalizadas -> finalizada
       if all_finished:
         record.state = '13'
-        continue
-
-      if all_closed:
-        record.state = '14'
         continue
 
       # si hay instancias superiores y subsanaciones -> subsanación/instancia superior
@@ -590,10 +590,7 @@ class Validation(models.Model):
       if any_finished and any_reviewed:
         record.state = '12'
         continue
-        
-      if all_closed:
-        record.state = '14'
-        continue
+
 
   def _compute_is_state_read_only(self):
     for record in self:
