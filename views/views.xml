@@ -17,6 +17,23 @@
         </tree>
       </field>
     </record>
+
+    <!-- filtros para las validation -->
+    <record model="ir.ui.view" id="maya_valid.validation_search">
+      <field name="name">Búsqueda para convalidaciones</field>
+      <field name="model">maya_valid.validation</field>
+      <field name="arch" type="xml">
+        <search>
+          <filter name="filter_in_process" string="Por procesar" domain="['|', ('state', '=', '0'), ('state', '=', '1')]"/>
+          <filter name="filter_resolved" string="Resueltas" domain="[('state', '=', '5')]"/>
+          <filter name="filter_reviewed" string="Revisadas" domain="[('state', '=', '8')]"/>
+          <group expand='0' string='Agrupar'>
+            <filter name="group_by_course" string="Ciclo" context="{'group_by': 'course_id'}"/>
+            <filter name="group_by_state" string="Estado" context="{'group_by': 'state'}"/>
+          </group>
+        </search>    
+      </field>
+    </record>
   
     <record model="ir.ui.view" id="maya_valid.validation_form">
       <field name="name">validation.form.view</field>
