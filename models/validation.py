@@ -273,7 +273,7 @@ class Validation(models.Model):
         row += f'<td style="padding-left:1rem">{val.comments}</td>'
         row += '</tr>'
 
-        table += row
+        table_denied += row
 
       table_denied += '</tbody></table>'
 
