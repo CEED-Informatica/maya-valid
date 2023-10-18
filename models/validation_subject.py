@@ -44,8 +44,9 @@ class ValidationSubject(models.Model):
   validation_type = fields.Selection([
       ('aa', 'Aprobado con Anterioridad'),
       ('co', 'Convalidación'),
+      ('ca', 'Aprobado/convalidado anteriormente'),
       ], string ='Tipo de convalidación', default = 'aa',
-      help = "Permite indicar si la convalidación es un aprobado con anterioridad (mismo código de módulo) o una convalidación")
+      help = "Permite indicar si la convalidación es un aprobado con anterioridad (mismo código de módulo), una convalidación o ya se habia aprobado/convalidado")
   
   mark = fields.Selection([
       ('5', '5'),
@@ -54,8 +55,7 @@ class ValidationSubject(models.Model):
       ('8', '8'),
       ('9', '9'),
       ('10', '10'),
-      ('11', 'MH')
-      ], string =" Nota")
+      ], string ="Nota")
   
   comments = fields.Text(string = 'Comentarios / Razón rechazo',
                          help = 'Ciclo aportado, centro donde se cursó, titulación de inglés aportada...')
@@ -89,7 +89,7 @@ class ValidationSubject(models.Model):
     ('RL', 'Ciclo LOGSE: no se aporta curso de riesgo laborales > 30h'),
     ('EXP', 'No se aporta expediente académico'),
     ('TLE', 'No se aporta titulación lengua extranjera'),
-    ('NCO', 'Es necesario aportar certificado del ciclo donde se cursó originalmente'),
+    ('NCO', 'Es necesario aportar certificado de los estudios originales.'),
     ], string ='Razón de la subsanación',
     help = "Permite indicar el motivo por el que se solicita la subsanación")
   
@@ -176,7 +176,7 @@ class ValidationSubject(models.Model):
     if state == '2' and not self._check_attribute_value('comments', vals): 
       raise ValidationError(f'La convalidación de {self.subject_id.name} se ha escalado a un instancia superior y no se ha definido un comentario justificándolo')
   
-    if int(state) > 2 and \
+    if int(state) > 2 and self.validation_type != 'ca' and \
       not self._check_attribute_value('accepted', vals):
         raise ValidationError(f'No se ha definido si la convalidación de {self.subject_id.name} está aceptada o no.')
     
@@ -184,6 +184,9 @@ class ValidationSubject(models.Model):
       accepted = vals['accepted']
     else:
       accepted = self.accepted
+
+    if int(state) > 2 and self.validation_type == 'ca' and accepted != False:
+        raise ValidationError(f'No se puede aceptar o denegar la convalidación de {self.subject_id.name} ya que fue aprobado o convalidado anteriormente')
 
     if int(state) > 2 and accepted == '1' and \
       (not self._check_attribute_value('mark', vals) or \
@@ -196,6 +199,11 @@ class ValidationSubject(models.Model):
     if int(state) > 2 and accepted == '2' and \
       not self._check_attribute_value('comments', vals):
         raise ValidationError(f'La convalidación de {self.subject_id.name} está rechazada pero no se ha definido un comentario')
+    
+    if int(state) > 2 and self.validation_type == 'ca':
+      vals['mark'] = False
+      vals['comments'] = ''
+      vals['validation_reason'] = False
     
     # si no es subsanación se elimina la razon
     if state != '1':

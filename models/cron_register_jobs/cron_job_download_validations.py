@@ -308,7 +308,9 @@ class CronJobDownloadValidations(models.TransientModel):
 
         appendix = ''
         if len(missing_fields) > 5:
-          appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado en el aula virtual y asegúrese que no envía una versión escaneada/fotografiada.</p>'
+          appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado \
+            en el aula virtual, que no envía una versión escaneada/fotografiada o \
+            que el anexo se encuentra en un documento separado.</p>'
         
         submission.save_grade(3, new_attempt = True, 
                                  feedback = validation.create_correction('ANC', 
