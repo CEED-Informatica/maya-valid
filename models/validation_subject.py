@@ -30,6 +30,7 @@ class ValidationSubject(models.Model):
   """
   _name = 'maya_valid.validation_subject'
   _description = 'Módulo a convalidar'
+  #_inherit = ['mail.thread', 'mail.activity.mixin']
 
   validation_id = fields.Many2one('maya_valid.validation', string = 'Convalidación', required = True)
   subject_id = fields.Many2one('maya_core.subject', string = 'Módulo', required = True)
@@ -168,6 +169,11 @@ class ValidationSubject(models.Model):
     else:
       state = self.state
 
+    if 'validation_type' in vals: # si cambia el estado
+      validation_type = vals['validation_type']
+    else:
+      validation_type = self.validation_type
+
     # si el estado es subsanación tiene que haber una razón
     if state == '1' and not self._check_attribute_value('correction_reason', vals): 
       raise ValidationError(f'La convalidación de {self.subject_id.name} tiene un estado de subsanación y no se ha definido la razón')
@@ -176,7 +182,7 @@ class ValidationSubject(models.Model):
     if state == '2' and not self._check_attribute_value('comments', vals): 
       raise ValidationError(f'La convalidación de {self.subject_id.name} se ha escalado a un instancia superior y no se ha definido un comentario justificándolo')
   
-    if int(state) > 2 and self.validation_type != 'ca' and \
+    if int(state) > 2 and validation_type != 'ca' and \
       not self._check_attribute_value('accepted', vals):
         raise ValidationError(f'No se ha definido si la convalidación de {self.subject_id.name} está aceptada o no.')
     
@@ -185,7 +191,7 @@ class ValidationSubject(models.Model):
     else:
       accepted = self.accepted
 
-    if int(state) > 2 and self.validation_type == 'ca' and accepted != False:
+    if int(state) > 2 and validation_type == 'ca' and accepted != False:
         raise ValidationError(f'No se puede aceptar o denegar la convalidación de {self.subject_id.name} ya que fue aprobado o convalidado anteriormente')
 
     if int(state) > 2 and accepted == '1' and \
@@ -200,7 +206,7 @@ class ValidationSubject(models.Model):
       not self._check_attribute_value('comments', vals):
         raise ValidationError(f'La convalidación de {self.subject_id.name} está rechazada pero no se ha definido un comentario')
     
-    if int(state) > 2 and self.validation_type == 'ca':
+    if int(state) > 2 and validation_type == 'ca':
       vals['mark'] = False
       vals['comments'] = ''
       vals['validation_reason'] = False
