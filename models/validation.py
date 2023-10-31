@@ -242,13 +242,19 @@ class Validation(models.Model):
       row = '<tr>'
       row += f'<td>{val.subject_id.code}</td>'
       row += f'<td style="padding-left:1rem">{val.subject_id.name}</td>'
-      row += f'<td style="padding-left:1rem">{dict(val._fields["validation_type"].selection).get(val.validation_type)}</td>'
+      if val.validation_type == 'ca':
+        row += f'<td>--</td>'
+      else:
+        row += f'<td style="padding-left:1rem">{dict(val._fields["validation_type"].selection).get(val.validation_type)}</td>'
       row += f'<td style="text-align: center">{dict(val._fields["accepted"].selection).get(val.accepted)}</td>'
       if val.accepted == '1':
         row += f'<td style="text-align: center">{dict(val._fields["mark"].selection).get(val.mark)}</td>'
       else:
-        row += '<td></td>'
+        row += '<td>--</td>'
+        
+      if val.accepted == '2':
         need_table_denied = True
+
       row += '</tr>'
 
       table += row
@@ -367,7 +373,6 @@ class Validation(models.Model):
     else:
       self.sign_state = False
   
-   
   def download_validation_action(self):
     """
     Descarga la última versión de la documentación
