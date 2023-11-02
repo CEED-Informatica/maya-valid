@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessDenied
 import logging
 import os
 
@@ -30,10 +30,19 @@ class ValidationSubject(models.Model):
   """
   _name = 'maya_valid.validation_subject'
   _description = 'Módulo a convalidar'
+  _rec_name = 'validation_subject_info' 
+  # necesario para poder asociar actividades
   #_inherit = ['mail.thread', 'mail.activity.mixin']
 
   validation_id = fields.Many2one('maya_valid.validation', string = 'Convalidación', required = True)
+  student_nia = fields.Char(related = 'validation_id.student_nia')
+  student_info = fields.Char(string = 'Estudiante', compute = '_compute_student_info')
+  course_info = fields.Char(related = 'validation_id.course_abbr')
+
+  validation_subject_info = fields.Char(string = 'Convalidación módulo', compute = '_compute_validation_subject_info')
+
   subject_id = fields.Many2one('maya_core.subject', string = 'Módulo', required = True)
+  subject_abbr = fields.Char(related = 'subject_id.abbr') 
 
   validator_id = fields.Many2one('maya_core.employee', string = 'Resuelta por')
   validation_date_id = fields.Date(string = 'Fecha resolución') 
@@ -77,6 +86,7 @@ class ValidationSubject(models.Model):
   validation_reason = fields.Selection([
       ('FOLRL', 'Ciclo LOGSE + RL (>30h)'),
       ('B2', 'Título B2 o superior'),
+      ('IDI', 'Grado/Licenciatura en Filología o Traducción'),
       ('AA', 'Común con otro ciclo formativo (AA)'),
       ('OCF', 'Otro(s) módulo(s) de Ciclo Formativo'),
       ('AUC', 'Aporta todas las Unidades de Competencia'),
@@ -91,6 +101,7 @@ class ValidationSubject(models.Model):
     ('EXP', 'No se aporta expediente académico'),
     ('TLE', 'No se aporta titulación lengua extranjera'),
     ('NCO', 'Es necesario aportar certificado de los estudios originales.'),
+    ('NAI', 'Es necesario indicar el idioma acreditado.'),
     ], string ='Razón de la subsanación',
     help = "Permite indicar el motivo por el que se solicita la subsanación")
   
@@ -128,6 +139,14 @@ class ValidationSubject(models.Model):
       choices.clear()
 
     return choices 
+  
+  def _compute_validation_subject_info(self):
+    for record in self:
+      record.validation_subject_info = f'[{record.subject_abbr}/{record.course_info}] {record.validation_id.student_surname}, {record.validation_id.student_name}'
+
+  def _compute_student_info(self):
+    self.ensure_one()
+    self.student_info = f'{self.validation_id.student_surname}, {self.validation_id.student_name}'
   
   @api.depends('state')
   def _compute_state_read_only(self):
@@ -294,3 +313,4 @@ class ValidationSubject(models.Model):
       for file_path in os.listdir(validations_path_course):
         if os.path.isfile(os.path.join(validations_path_course, file_path)):
           files.append(file_path) # aunque mejor hacer ya la descompresion, no?
+
