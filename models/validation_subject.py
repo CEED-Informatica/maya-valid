@@ -102,6 +102,7 @@ class ValidationSubject(models.Model):
     ('TLE', 'No se aporta titulación lengua extranjera'),
     ('NCO', 'Es necesario aportar certificado de los estudios originales.'),
     ('NAI', 'Es necesario indicar el idioma acreditado.'),
+    ('NAUC', 'Es necesario aportar unidades de competencia asociadas.'),
     ], string ='Razón de la subsanación',
     help = "Permite indicar el motivo por el que se solicita la subsanación")
   
