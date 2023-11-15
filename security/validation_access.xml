@@ -149,12 +149,12 @@
     <!-- ************************************************************************* -->
 
     <!-- Regla para ver solo las convalidaciones que le corresponden al convalidador -->
-    <!-- Regla para ver solo las convalidaciones resueltas -->
+    <!-- Regla para ver solo las convalidaciones resueltas o en instancia superior o en subsanación-->
     <record id="maya_valid.validation_coordfp_rol_rule" model="ir.rule">
       <field name="name">Acceso de los revisores sólo a las convalidaciones en estado de revisión</field>
       <field name="model_id" ref="model_maya_valid_validation"/>
       <field name="groups" eval="[(4, ref('maya_core.group_MNGT_FP'))]"/>
-      <field name="domain_force">[('state','in',['5','6','7','8','9','10','11','12','13','14'])]</field>
+      <field name="domain_force">[('state','in',['2','3','4','5','6','7','8','9','10','11','12','13','14'])]</field>
     </record>
 
     <record id="maya_valid.validation_validator_rol_rule" model="ir.rule">
