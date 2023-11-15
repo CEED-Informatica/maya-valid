@@ -235,7 +235,7 @@ class ValidationSubject(models.Model):
     if state != '1':
       vals['correction_reason'] = False
     
-    if state == '0':
+    if state == '0' or state == '1':
       vals['mark'] = False
       vals['accepted'] = False
       vals['validation_reason'] = False
