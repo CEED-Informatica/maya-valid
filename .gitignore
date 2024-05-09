@@ -1,1 +1,3 @@
 **/__pycache__
+/static/mbz/*_mbz
+/static/mbz/*.mbz
