@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="101988" moduleid="332939" modulename="resource" contextid="639344">
+  <resource id="101988">
+    <name>Anexo V. Convalidaciones Ministerio</name>
+    <intro></intro>
+    <introformat>1</introformat>
+    <tobemigrated>0</tobemigrated>
+    <legacyfiles>0</legacyfiles>
+    <legacyfileslast>$@NULL@$</legacyfileslast>
+    <display>0</display>
+    <displayoptions>a:1:{s:10:"printintro";i:1;}</displayoptions>
+    <filterfiles>0</filterfiles>
+    <revision>0</revision>
+    <timemodified>1714121487</timemodified>
+  </resource>
+</activity>

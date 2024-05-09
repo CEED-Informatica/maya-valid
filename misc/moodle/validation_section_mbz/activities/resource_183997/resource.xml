@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="60911" moduleid="183997" modulename="resource" contextid="201649">
+  <resource id="60911">
+    <name>Orientaciones convalidación de módulos profesionales</name>
+    <intro></intro>
+    <introformat>1</introformat>
+    <tobemigrated>0</tobemigrated>
+    <legacyfiles>0</legacyfiles>
+    <legacyfileslast>$@NULL@$</legacyfileslast>
+    <display>0</display>
+    <displayoptions>a:1:{s:10:"printintro";i:1;}</displayoptions>
+    <filterfiles>0</filterfiles>
+    <revision>0</revision>
+    <timemodified>1508223305</timemodified>
+  </resource>
+</activity>

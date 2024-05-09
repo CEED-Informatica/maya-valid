@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<course id="2094" contextid="180222">
+  <shortname>SEG9_CEE_46025799_2022_836104_TU02CF</shortname>
+  <fullname>Tutoria DAM 23/24</fullname>
+  <idnumber>CEE_46025799_2023_836104_TU02CF</idnumber>
+  <summary></summary>
+  <summaryformat>0</summaryformat>
+  <format>topics</format>
+  <showgrades>1</showgrades>
+  <newsitems>1</newsitems>
+  <startdate>1695024120</startdate>
+  <enddate>0</enddate>
+  <marker>0</marker>
+  <maxbytes>0</maxbytes>
+  <legacyfiles>0</legacyfiles>
+  <showreports>0</showreports>
+  <visible>1</visible>
+  <groupmode>0</groupmode>
+  <groupmodeforce>0</groupmodeforce>
+  <defaultgroupingid>0</defaultgroupingid>
+  <lang></lang>
+  <theme></theme>
+  <timecreated>1632320823</timecreated>
+  <timemodified>1694973841</timemodified>
+  <requested>0</requested>
+  <showactivitydates>0</showactivitydates>
+  <showcompletionconditions>$@NULL@$</showcompletionconditions>
+  <enablecompletion>0</enablecompletion>
+  <completionnotify>0</completionnotify>
+  <category id="898">
+    <name>Desarrollo de Aplicaciones Multiplataforma</name>
+    <description></description>
+  </category>
+  <tags>
+  </tags>
+  <customfields>
+  </customfields>
+  <courseformatoptions>
+    <courseformatoption>
+      <format>topics</format>
+      <sectionid>0</sectionid>
+      <name>coursedisplay</name>
+      <value>0</value>
+    </courseformatoption>
+    <courseformatoption>
+      <format>topics</format>
+      <sectionid>0</sectionid>
+      <name>hiddensections</name>
+      <value>0</value>
+    </courseformatoption>
+  </courseformatoptions>
+</course>

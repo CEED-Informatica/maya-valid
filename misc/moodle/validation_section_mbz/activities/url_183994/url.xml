@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="26124" moduleid="183994" modulename="url" contextid="201646">
+  <url id="26124">
+    <name>Convalidaciones. PROP de la Generalitat Valenciana / Convalidacions. PROP de la Generalitat Valenciana</name>
+    <intro>&lt;p&gt;Información sobre convalidaciones ofrecida por el PROP de la Generalitat Valenciana&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Informació sobre convalidacions oferida pel PROP de la Generalitat Valenciana&lt;br&gt;&lt;/p&gt;</intro>
+    <introformat>1</introformat>
+    <externalurl>http://www.gva.es/es/inicio/procedimientos?id_proc=15544&amp;id_page=null&amp;id_site=null</externalurl>
+    <display>0</display>
+    <displayoptions>a:1:{s:10:"printintro";i:1;}</displayoptions>
+    <parameters>a:0:{}</parameters>
+    <timemodified>1694189074</timemodified>
+  </url>
+</activity>

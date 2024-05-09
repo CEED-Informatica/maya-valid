@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="26125" moduleid="183995" modulename="url" contextid="201647">
+  <url id="26125">
+    <name>Convalidaciones: Ministerio de Educación y FP / Convalidacions: Ministeri d'Educació i FP</name>
+    <intro>&lt;p&gt;Información sobre convalidaciones ofrecida por el MEFP&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Informació sobre convalidacions oferida pel MEFP&lt;/p&gt;</intro>
+    <introformat>1</introformat>
+    <externalurl>https://portal.edu.gva.es/ceedcv/es/ciclos-formativos-a-distancia/</externalurl>
+    <display>0</display>
+    <displayoptions>a:1:{s:10:"printintro";i:1;}</displayoptions>
+    <parameters>a:0:{}</parameters>
+    <timemodified>1694189239</timemodified>
+  </url>
+</activity>

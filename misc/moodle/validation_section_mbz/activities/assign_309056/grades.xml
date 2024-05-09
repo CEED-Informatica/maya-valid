@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity_gradebook>
+  <grade_items>
+    <grade_item id="66969">
+      <categoryid>10407</categoryid>
+      <itemname>Entrega documentación convalidación y/o aprobado con anterioridad / Lliurament documentació convalidació i/o aprovat amb anterioritat</itemname>
+      <itemtype>mod</itemtype>
+      <itemmodule>assign</itemmodule>
+      <iteminstance>25608</iteminstance>
+      <itemnumber>0</itemnumber>
+      <iteminfo>$@NULL@$</iteminfo>
+      <idnumber></idnumber>
+      <calculation>$@NULL@$</calculation>
+      <gradetype>2</gradetype>
+      <grademax>4.00000</grademax>
+      <grademin>1.00000</grademin>
+      <scaleid>224</scaleid>
+      <outcomeid>$@NULL@$</outcomeid>
+      <gradepass>0.00000</gradepass>
+      <multfactor>1.00000</multfactor>
+      <plusfactor>0.00000</plusfactor>
+      <aggregationcoef>0.00000</aggregationcoef>
+      <aggregationcoef2>0.00000</aggregationcoef2>
+      <weightoverride>0</weightoverride>
+      <sortorder>3</sortorder>
+      <display>0</display>
+      <decimals>$@NULL@$</decimals>
+      <hidden>0</hidden>
+      <locked>0</locked>
+      <locktime>0</locktime>
+      <needsupdate>0</needsupdate>
+      <timecreated>1695732610</timecreated>
+      <timemodified>1697701073</timemodified>
+      <grade_grades>
+      </grade_grades>
+    </grade_item>
+  </grade_items>
+  <grade_letters>
+  </grade_letters>
+</activity_gradebook>

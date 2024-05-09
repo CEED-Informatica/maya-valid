@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="25608" moduleid="309056" modulename="assign" contextid="575766">
+  <assign id="25608">
+    <name>Entrega documentación convalidación y/o aprobado con anterioridad / Lliurament documentació convalidació i/o aprovat amb anterioritat</name>
+    <intro>&lt;p dir="ltr" style="text-align: left;"&gt;&lt;/p&gt;
+&lt;p dir="ltr"&gt;&lt;strong&gt;Entrega de la documentación para la convalidación o el aprobado con anterioridad de módulos.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul dir="ltr"&gt;
+    &lt;li&gt;Se admite solamente &lt;strong&gt;un único fichero comprimido en formato zip&lt;/strong&gt; de menos de 50MB&lt;/li&gt;
+    &lt;li&gt;El fichero comprimido debe incluir como mínimo dos ficheros (ambos en formato pdf):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div&gt;
+    &lt;ol&gt;
+        &lt;li&gt;Anexo de convalidaciones cumplimentado correctamente y &lt;strong&gt;firmado electrónicamente&lt;/strong&gt;&lt;br&gt;&lt;/li&gt;
+        &lt;li&gt;Un fichero en formato pdf con toda la documentación necesaria para realizar la convalidación (expedientes académicos, titulaciones, etc)&lt;br&gt;&lt;/li&gt;
+    &lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+&lt;div&gt;&lt;strong&gt;Lliurament documentació convalidació i/o aprovat amb anterioritat.&lt;/strong&gt;&lt;/div&gt;&lt;br&gt;
+
+&lt;ul dir="ltr"&gt;
+    &lt;li&gt;S'admet només un &lt;strong&gt;únic fitxer comprimit en format zip &lt;/strong&gt;de menys de 50MB&lt;/li&gt;
+    &lt;li&gt;El fitxer comprimit ha d'incloure com a mínim dos fitxers (tots dos en format pdf):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div&gt;
+    &lt;ol&gt;
+        &lt;li&gt;Annex de convalidacions emplenat correctament i signat electrònicament&lt;/li&gt;
+        &lt;li&gt;Un fitxer en format pdf amb tota la documentació necessària per fer la convalidació (expedients acadèmics, titulacions, etc)&lt;br&gt;&lt;/li&gt;
+    &lt;/ol&gt;
+&lt;/div&gt;</intro>
+    <introformat>1</introformat>
+    <alwaysshowdescription>0</alwaysshowdescription>
+    <submissiondrafts>0</submissiondrafts>
+    <sendnotifications>0</sendnotifications>
+    <sendlatenotifications>0</sendlatenotifications>
+    <sendstudentnotifications>1</sendstudentnotifications>
+    <duedate>{{ date_due }}</duedate>
+    <cutoffdate>0</cutoffdate>
+    <gradingduedate>0</gradingduedate>
+    <allowsubmissionsfromdate>0</allowsubmissionsfromdate>
+    <grade>-224</grade>
+    <timemodified>1697701072</timemodified>
+    <completionsubmit>0</completionsubmit>
+    <requiresubmissionstatement>0</requiresubmissionstatement>
+    <teamsubmission>0</teamsubmission>
+    <requireallteammemberssubmit>0</requireallteammemberssubmit>
+    <teamsubmissiongroupingid>0</teamsubmissiongroupingid>
+    <blindmarking>0</blindmarking>
+    <hidegrader>0</hidegrader>
+    <revealidentities>0</revealidentities>
+    <attemptreopenmethod>manual</attemptreopenmethod>
+    <maxattempts>-1</maxattempts>
+    <markingworkflow>0</markingworkflow>
+    <markingallocation>0</markingallocation>
+    <preventsubmissionnotingroup>0</preventsubmissionnotingroup>
+    <userflags>
+    </userflags>
+    <submissions>
+    </submissions>
+    <grades>
+    </grades>
+    <plugin_configs>
+      <plugin_config id="275237">
+        <plugin>onenote</plugin>
+        <subtype>assignfeedback</subtype>
+        <name>enabled</name>
+        <value>0</value>
+      </plugin_config>
+      <plugin_config id="275232">
+        <plugin>file</plugin>
+        <subtype>assignfeedback</subtype>
+        <name>enabled</name>
+        <value>0</value>
+      </plugin_config>
+      <plugin_config id="275226">
+        <plugin>offline</plugin>
+        <subtype>assignfeedback</subtype>
+        <name>enabled</name>
+        <value>0</value>
+      </plugin_config>
+      <plugin_config id="275227">
+        <plugin>editpdf</plugin>
+        <subtype>assignfeedback</subtype>
+        <name>enabled</name>
+        <value>0</value>
+      </plugin_config>
+      <plugin_config id="275228">
+        <plugin>comments</plugin>
+        <subtype>assignfeedback</subtype>
+        <name>commentinline</name>
+        <value>0</value>
+      </plugin_config>
+      <plugin_config id="275235">
+        <plugin>comments</plugin>
+        <subtype>assignfeedback</subtype>
+        <name>enabled</name>
+        <value>1</value>
+      </plugin_config>
+      <plugin_config id="275236">
+        <plugin>comments</plugin>
+        <subtype>assignsubmission</subtype>
+        <name>enabled</name>
+        <value>1</value>
+      </plugin_config>
+      <plugin_config id="275229">
+        <plugin>file</plugin>
+        <subtype>assignsubmission</subtype>
+        <name>filetypeslist</name>
+        <value>.zip</value>
+      </plugin_config>
+      <plugin_config id="275230">
+        <plugin>file</plugin>
+        <subtype>assignsubmission</subtype>
+        <name>maxsubmissionsizebytes</name>
+        <value>0</value>
+      </plugin_config>
+      <plugin_config id="275231">
+        <plugin>file</plugin>
+        <subtype>assignsubmission</subtype>
+        <name>maxfilesubmissions</name>
+        <value>1</value>
+      </plugin_config>
+      <plugin_config id="275233">
+        <plugin>file</plugin>
+        <subtype>assignsubmission</subtype>
+        <name>enabled</name>
+        <value>1</value>
+      </plugin_config>
+      <plugin_config id="275234">
+        <plugin>onlinetext</plugin>
+        <subtype>assignsubmission</subtype>
+        <name>enabled</name>
+        <value>0</value>
+      </plugin_config>
+    </plugin_configs>
+    <overrides>
+    </overrides>
+  </assign>
+</activity>

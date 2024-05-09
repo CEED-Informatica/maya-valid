@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scales_definition>
+  <scale id="224">
+    <courseid>2094</courseid>
+    <userid>1386</userid>
+    <name>Convalidaciones</name>
+    <scale>Recibida, Tramitación, Subsanación, Resolución</scale>
+    <description></description>
+    <descriptionformat>1</descriptionformat>
+    <timemodified>1694121942</timemodified>
+  </scale>
+</scales_definition>
