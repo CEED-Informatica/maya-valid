@@ -156,7 +156,7 @@ class CronJobDownloadValidations(models.TransientModel):
       # esta comprobación se hace la primera para evitar problemas de resto de datos que puede
       # haber en el tarea de Moodle
       if len(submission.files) == 0:
-        _logger.info("No hay ficheros en la entrega")
+        _logger.info(f"No hay ficheros en la entrega {submission.userid}")
         continue
 
       new_documentation = False
