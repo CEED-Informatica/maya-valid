@@ -11,6 +11,8 @@ from ..support import helper
 import base64
 import logging
 
+import xml.etree.ElementTree as ET
+
 from datetime import date, timedelta, datetime
 
 from ...maya_core.support.maya_logger.exceptions import MayaException
@@ -28,13 +30,13 @@ class Course(models.Model):
   _inherit = 'maya_core.course'
 
   def create_mbz_validation_tasks(self):
-    """  for re in self:
-      print("dio") """
 
     self.ensure_one()
    
     path_mbz_template = os.path.join(os.path.dirname(__file__), '../misc/moodle/validation_section_mbz')
     path_tmp = os.path.join(os.path.dirname(__file__), '../static/mbz', f'validation_section_{self.abbr}_{self.code}_mbz')
+
+    zip_name = f'validation_section_{self.abbr}_{self.code}.mbz'
 
     if not os.path.exists(path_tmp):  
       os.makedirs(path_tmp)
@@ -55,6 +57,8 @@ class Course(models.Model):
     init_due_date_task = current_school_year.date_init_lective - timedelta(days = 2)
 
     dict_variables =  {
+      'filename': zip_name,
+      'num_section': 1, # es necesario crear previamente la sección 1 vacia en Moodle
       'desc_term_lan1': f'Del {current_school_year.date_init_lective.day}/{current_school_year.date_init_lective.month} al {new_due_date.day}/{new_due_date.month} (ambos incluidos/tots dos inclosos)',
       'title_annex_lan1': f'Anexo convalidaciones {self.abbr} (es)', 
       'file_annex_lan1': f'Anexo convalidaciones {self.abbr}.pdf',   # (es)
@@ -96,7 +100,23 @@ class Course(models.Model):
     except Exception as e:
       print(e.toString())
 
-    zip_name = f'validation_section_{self.abbr}_{self.code}.mbz'
+    
+    tree = ET.parse(os.path.join(path_tmp, 'files.xml'))
+    hashs_ok = [el.text for el in tree.findall('.//file/contenthash')]
+    for path, subdirs, files in os.walk(os.path.join(path_tmp, 'files')):
+        for name in files:
+          if name in hashs_ok:
+            continue
+          else:
+            full_path = pathlib.PurePath(path, name)
+            shutil.rmtree(os.path.join(path_tmp, 'files', name[:2]), ignore_errors = True)
+
+    #os.remove(os.path.join(path_tmp, '.ARCHIVE_INDEX'))
+    with open(os.path.join(path_tmp, '.ARCHIVE_INDEX'), 'w') as file_index:
+      for file_idx in self._create_index_in_mbz(path_tmp):
+        file_index.write(file_idx + '\n')
+    
+  
     # cambio del plazo 
     shutil.make_archive(os.path.join(path_tmp[:path_tmp.find('validation_section_')], zip_name), 'zip', path_tmp)
     os.rename(os.path.join(path_tmp[:path_tmp.find('validation_section_')], f'{zip_name}.zip'), os.path.join(path_tmp[:path_tmp.find('validation_section_')], zip_name))
@@ -132,5 +152,24 @@ class Course(models.Model):
     
     else:
       return None
+    
+  def _create_index_in_mbz(self, path_tmp) -> list:
+    files_in_mbz = []
+
+    for path, subdirs, files in os.walk(path_tmp):
+      if os.path.relpath(path, path_tmp) != '.':
+        files_in_mbz.append(f'{os.path.relpath(path, path_tmp)}/\td\t0\t?')
+      
+      for name in files:    
+        if name == '.ARCHIVE_INDEX':
+          continue
+        full_path = pathlib.PurePath(path, name)
+        path_rel = os.path.relpath(full_path, path_tmp)
+        files_in_mbz.append(f'{path_rel}\tf\t{os.path.getsize(str(full_path))}\t{int(os.path.getctime(str(full_path)))}')
+
+    count = len(files_in_mbz)
+    files_in_mbz.insert(0,f'Moodle archive file index. Count: {count}')
+
+    return files_in_mbz
 
     

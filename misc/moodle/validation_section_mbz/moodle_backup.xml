@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <moodle_backup>
   <information>
-    <name>backup-moodle2-course-2094-seg9_cee_46025799_2022_836104_tu02cf-20240502-2325-nu.mbz</name>
+    <name>{{ filename }}</name>
     <moodle_version>2021051717.07</moodle_version>
     <moodle_release>3.11.17+ (Build: 20231201)</moodle_release>
     <backup_version>2021051700</backup_version>
@@ -234,7 +234,7 @@
       <setting>
         <level>root</level>
         <name>filename</name>
-        <value>backup-moodle2-course-2094-seg9_cee_46025799_2022_836104_tu02cf-20240502-2325-nu.mbz</value>
+        <value>{{ filename }}</value>
       </setting>
       <setting>
         <level>root</level>

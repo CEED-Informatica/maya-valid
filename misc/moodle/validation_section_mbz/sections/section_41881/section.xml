@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="41881">
-  <number>2</number>
+  <number>{{ num_section }}</number>
   <name>Convalidaciones y Aprobados con Anterioridad / Convalidacions i Aprovats amb Anterioritat</name>
   <summary></summary>
   <summaryformat>1</summaryformat>
