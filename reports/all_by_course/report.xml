@@ -1,0 +1,31 @@
+<odoo>
+  <report id="validations_pdf_report"
+    string="Convalidaciones"
+    model="maya_valid.validation"
+    report_type="qweb-pdf"
+    file="maya_valid.report_validations"
+    name="maya_valid.report_validations"
+    print_report_name="'Convalidaciones - %s' % (object.school_year_id.name)"/>
+    
+  <template id="report_validations">
+    <t t-call="web.html_container">
+      <!-- por si se mandará a imprimir calendarios de varios cursos escolares -->
+     
+      <t t-call="web.external_layout"> <!-- añade el header y el footer -->
+        <!-- wktmltopdf no lee los ficheros CSS externos, asi que hay que embeber el código
+              en la etiqueta style. Para poder disponer del código en un fichero externo
+              buscamos la etiqueta style e  insertamos el enlace al ficher .css  -->
+        <xpath expr="//style" position="after">
+          <link rel="stylesheet" href="/maya_core/static/css/school_calendar_report.css"/>
+        </xpath>
+        <style/>
+        <h2>Convalidaciones</h2>
+        <t t-foreach="docs" t-as="record">
+          <div class="page">
+             <p><span>Nombre: </span><t t-esc="record.student_nia"/></p>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+</odoo>

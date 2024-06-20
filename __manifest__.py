@@ -38,6 +38,7 @@
         'security/cron_access.xml',
         'security/ir.model.access.csv',
         'security/validation_access.xml',   # politicas de acceso a convalidaciones (reescribe las anteriores)
+        'security/report_access.xml', 
         # vistas
         'views/views.xml',
         'views/templates.xml',
@@ -47,7 +48,9 @@
         'data/roles/validations.xml',
         'data/registered_cron_jobs.xml',
         # reports
-        
+        'reports/reports.xml',
+        'reports/all_by_course/view.xml',
+        'reports/all_by_course/report.xml',
     ],
     'installable': True,
     'application': True,
