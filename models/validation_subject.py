@@ -54,7 +54,7 @@ class ValidationSubject(models.Model):
   validation_type = fields.Selection([
       ('aa', 'Aprobado con Anterioridad'),
       ('co', 'Convalidación'),
-      ('ca', 'Aprobado/convalidado anteriormente'),
+      ('ca', 'Aprobado/convalidado previamente'),
       ], string ='Tipo de convalidación', default = 'aa',
       help = "Permite indicar si la convalidación es un aprobado con anterioridad (mismo código de módulo), una convalidación o ya se habia aprobado/convalidado")
   
