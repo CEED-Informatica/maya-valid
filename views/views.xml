@@ -210,5 +210,17 @@
     <!-- Menu Configuración -->
     <menuitem name="General" id="maya_valid.menu_settings" parent="maya_valid.menu_configuration"
               action="maya_valid.action_config_settings"/>
+
+    <!-- REPORT Menu -->
+    <record model="ir.actions.act_window" id="maya_valid.action_show_core_reports">
+      <field name="name">Informes convalidaciones</field>
+      <field name="res_model">maya_report.report</field>
+      <field name="view_mode">tree</field>
+      <field name="context">{'module': 'maya_valid'}</field>
+<!--       <field name="flags">{'hasSelectors': 'false'}</field> -->
+    </record>
+
+    <menuitem name="Convalidaciones" id="maya_report.menu_valid" parent="maya_report.menu_reports"
+              action="maya_valid.action_show_core_reports"/>
   </data>
 </odoo>
