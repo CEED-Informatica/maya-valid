@@ -19,10 +19,29 @@
           <link rel="stylesheet" href="/maya_core/static/css/school_calendar_report.css"/>
         </xpath>
         <style/>
-        <h2>Convalidaciones</h2>
+        <h3>Convalidaciones </h3>
         <t t-foreach="docs" t-as="record">
           <div class="page">
-             <p><span>Nombre: </span><t t-esc="record.student_nia"/></p>
+             <p><span><t t-esc="record.student_surname"/>, <t t-esc="record.student_name"/> (<t t-esc="record.student_nia"/>)</span></p>
+
+             <table>
+              <thead>
+                <tr><th style="text-align: center;">Código</th><th style="text-align: center">Módulo</th><th style="text-align: center">Tipo</th><th style="text-align: center">Aceptada</th><th style="text-align: center">Calificación</th></tr></thead>
+                <tbody>
+                  <t t-foreach="record.validation_subjects_ids" t-as="val">
+                    <tr>
+                      <td><t t-esc="val.subject_id.code"/></td>
+                      <td style="padding-left:1rem"><t t-esc="val.subject_id.name"/></td>
+                      <td style="padding-left:1rem"><t t-esc="dict(val._fields['validation_type'].selection).get(val.validation_type)"/></td>
+                      <td style="text-align: center"><t t-esc="dict(val._fields['accepted'].selection).get(val.accepted)"/></td>
+                      <t t-if="val.accepted == '1'">
+                        <td style="text-align: center"><t t-esc="dict(val._fields['mark'].selection).get(val.mark)"/></td>
+                      </t>
+                      <t t-else=""><td></td></t>
+                    </tr>
+                  </t>
+                </tbody>
+             </table>
           </div>
         </t>
       </t>
