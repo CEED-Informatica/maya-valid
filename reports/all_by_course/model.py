@@ -18,7 +18,7 @@ class WizardReportAllByCourse(models.TransientModel):
 
   def generate_report(self):
     self.ensure_one()
-    
+
     if len(self.courses_ids) == 0 and not self.all_courses:
       return
     
@@ -28,9 +28,8 @@ class WizardReportAllByCourse(models.TransientModel):
       courses = self.courses_ids 
       
     for course in courses:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course.id)])
+      validations = self.env['maya_valid.validation'].search([('course_id', '=', course.id), ('state', '=', 14)], order = 'student_surname asc')
       pdf = self.env.ref('maya_valid.validations_pdf_report')._render_qweb_pdf([val.id for val in validations])[0]
-      
       data = base64.encodestring(pdf)
    
       #sss = os.path.join(os.path.dirname(__file__), f'{course.abbr}.pdf')

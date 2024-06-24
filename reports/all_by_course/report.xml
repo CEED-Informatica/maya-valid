@@ -22,9 +22,10 @@
         <h3>Convalidaciones </h3>
         <t t-foreach="docs" t-as="record">
           <div class="page">
-             <p><span><t t-esc="record.student_surname"/>, <t t-esc="record.student_name"/> (<t t-esc="record.student_nia"/>)</span></p>
+           <!--   <p><span><t t-esc="record.student_surname"/>, <t t-esc="record.student_name"/> (<t t-esc="record.student_nia"/>)</span></p> -->
+            <p><span><t t-esc="record.student_info"/></span></p>
 
-             <table class="table table-striped table-sm">
+            <table class="table table-striped table-sm">
               <thead>
                 <tr><th style="text-align: center;">Código</th><th style="text-align: center">Módulo</th><th style="text-align: center">Tipo</th><th style="text-align: center">Aceptada</th><th style="text-align: center">Calificación</th></tr></thead>
                 <tbody>

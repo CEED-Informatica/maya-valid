@@ -24,12 +24,13 @@ class Validation(models.Model):
   _name = 'maya_valid.validation'
   _description = 'Solicitud convalidación'
   _rec_name = 'student_info' 
+  _order = 'student_surname'
 
   school_year_id = fields.Many2one('maya_core.school_year', string = 'Curso escolar')
   
   student_id = fields.Many2one('maya_core.student', string = 'Estudiante', required = True)
   student_name = fields.Char(related = 'student_id.name') 
-  student_surname = fields.Char(related = 'student_id.surname') 
+  student_surname = fields.Char(related = 'student_id.surname', store = True) 
   student_nia = fields.Char(related = 'student_id.nia') 
   student_info = fields.Char(string = 'Estudiante', compute = '_compute_full_student_info')
 
@@ -102,6 +103,7 @@ class Validation(models.Model):
     ('ANC', 'Anexo no cumplimentado correctamente. Campos obligatorios no rellenados.'),
     ('ANP', 'Anexo no cumplimentado correctamente. Tipo (convalidación/aprobado con anterioridad) no indicado.'),
     ('SNF', 'Documento no firmado electrónicamente'),
+    ('VIN', 'El trámite solicitado se gestiona a través de otra vía.'),
     ('INT', 'Ver convalidaciones módulos'), # subsanaciones específicas de módulos
     ('ERR1', 'Error al notificar una subsanación que no era'), 
     ('ERR2', 'Error al notificar los detalles de una subsanación'), 
