@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields
+from odoo import models, tools
 from odoo.exceptions import ValidationError
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape, TemplateNotFound
@@ -33,8 +33,10 @@ class Course(models.Model):
 
     self.ensure_one()
    
-    path_mbz_template = os.path.join(os.path.dirname(__file__), '../misc/moodle/validation_section_mbz')
-    path_tmp = os.path.join(os.path.dirname(__file__), '../static/mbz', f'validation_section_{self.abbr}_{self.code}_mbz')
+    addons_path = max([path for path in tools.config['addons_path'].split(',') if path in os.path.dirname(__file__)], key = len)
+    
+    path_mbz_template = os.path.join(addons_path, 'maya_valid', 'misc','moodle', 'validation_section_mbz')
+    path_tmp = os.path.join(addons_path, 'maya_core', 'tmp_files', 'mbz', f'validation_section_{self.abbr}_{self.code}_mbz')
 
     zip_name = f'validation_section_{self.abbr}_{self.code}.mbz'
 
@@ -118,8 +120,9 @@ class Course(models.Model):
     
   
     # cambio del plazo 
-    shutil.make_archive(os.path.join(path_tmp[:path_tmp.find('validation_section_')], zip_name), 'zip', path_tmp)
-    os.rename(os.path.join(path_tmp[:path_tmp.find('validation_section_')], f'{zip_name}.zip'), os.path.join(path_tmp[:path_tmp.find('validation_section_')], zip_name))
+    path_zip_name = os.path.join(addons_path,'maya_valid','static','mbz', zip_name)    
+    shutil.make_archive(path_zip_name, 'zip', path_tmp)
+    os.rename(os.path.join(addons_path,'maya_valid','static','mbz', f'{zip_name}.zip'), os.path.join(addons_path,'maya_valid','static','mbz', zip_name))
 
     base_url = self.env['ir.config_parameter'].get_param('web.base.url')
 
@@ -137,10 +140,13 @@ class Course(models.Model):
 
     Devuelve el sha1 del fichero o None en caso de que la key no este definida
     """
+
+    addons_path = max([path for path in tools.config['addons_path'].split(',') if path in os.path.dirname(__file__)], key = len)
+    
     if key in dict_variables:
       try:
-        sha1 = helper.get_sha1_file(os.path.join(os.path.dirname(__file__), f'../misc/pdf/{dict_variables[key]}'))
-        size = os.path.getsize(os.path.join(os.path.dirname(__file__), f'../misc/pdf/{dict_variables[key]}'))
+        sha1 = helper.get_sha1_file(os.path.join(addons_path, 'maya_valid', 'misc', 'pdf', dict_variables[key]))
+        size = os.path.getsize(os.path.join(addons_path, 'maya_valid', 'misc', 'pdf', dict_variables[key]))
         path_file_tmp = os.path.join(path_tmp, 'files', sha1[:2])
         if not os.path.exists(path_file_tmp):  
           os.makedirs(path_file_tmp)
