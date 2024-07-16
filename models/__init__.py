@@ -5,3 +5,4 @@ from . import validation
 from . import validation_subject
 from . import cron_register_jobs
 from . import course
+from . import school_year

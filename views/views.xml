@@ -159,6 +159,24 @@
       </field>
     </record>
 
+    <record model="ir.ui.view" id="maya_valid.school_year_form_inherit">
+      <field name="name">school_year.form.view</field>
+      <field name="model">maya_core.school_year</field>
+      <field name="inherit_id" ref="maya_core.school_year_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="/form/notebook/page[3]" position="after">
+            <page string = "Convalidaciones">
+              <group col="2">
+                <group>
+                  <field name="date_init_valid"/>
+                </group>
+                <group></group>
+              </group>
+            </page>
+          </xpath>
+      </field>
+    </record>
+
     <!-- action server para la creación de las tareas moodle de convalidaciones por ciclo-->
     <record model="ir.actions.server" id="maya_valid.action_create_mbz_validation_tasks">
       <field name="name">Genera mbz tareas convalidaciones</field>
@@ -198,7 +216,7 @@
     </record>
 
     <!-- Top menu item -->
-    <menuitem name="Maya | Convalidaciones" id="maya_valid.menu_root"/>
+    <menuitem name="Maya | Convalidaciones" id="maya_valid.menu_root" sequence="3"/>
 
     <!-- menu categories -->
     <menuitem name="Convalidaciones" id="maya_valid.menu_validations_l0" parent="maya_valid.menu_root"/>
