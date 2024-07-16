@@ -23,6 +23,8 @@ class SchoolYear(models.Model):
 
   # inicio real de las convalidaciones
   date_init_valid = fields.Date(string = 'Inicio periodo de convalidaciones', compute = '_compute_date_init_valid', readonly = False, store = True)
+  # Fecha final de las convalidaciones
+  date_end_valid = fields.Date(string = 'Fin periodo de convalidaciones', compute = '_compute_date_end_valid', readonly = True)
 
   @api.depends('date_init_lective')
   def _compute_date_init_valid(self):
@@ -31,3 +33,26 @@ class SchoolYear(models.Model):
         record.date_init_valid = ''
       else:
         record.date_init_valid = record.date_init_lective
+
+  @api.depends('date_init_valid')
+  def _compute_date_end_valid(self):
+    for record in self:
+      if record.date_init_valid == False:
+        record.date_end_valid = ''
+      else:
+        record.date_end_valid =  record.date_init_valid + datetime.timedelta(days = 30)
+
+  def update_dates(self):
+    self.dates['init_valid'] = { 
+      'date': self.date_init_valid,
+      'desc': self._fields['date_init_valid'].string, 
+      'type': 'G'
+    }
+
+    self.dates['end_valid'] = { 
+      'date': self.date_end_valid,
+      'desc': self._fields['date_end_valid'].string, 
+      'type': 'G'
+    }
+
+    return super(SchoolYear, self).update_dates()

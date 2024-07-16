@@ -169,6 +169,7 @@
               <group col="2">
                 <group>
                   <field name="date_init_valid"/>
+                  <field name="date_end_valid"/>
                 </group>
                 <group></group>
               </group>
