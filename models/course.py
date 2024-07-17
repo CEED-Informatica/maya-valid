@@ -55,15 +55,17 @@ class Course(models.Model):
     else:
       current_school_year = current_sy[0]
 
-    new_due_date = current_school_year.date_init_lective + timedelta(days = 30)
-    init_due_date_task = current_school_year.date_init_lective - timedelta(days = 2)
+    new_due_date = current_school_year.date_init_valid + timedelta(days = 30)
+    init_due_date_task = current_school_year.date_init_valid - timedelta(days = 2)
 
     dict_variables =  {
       'filename': zip_name,
       'num_section': 1, # es necesario crear previamente la sección 1 vacia en Moodle
-      'desc_term_lan1': f'Del {current_school_year.date_init_lective.day}/{current_school_year.date_init_lective.month} al {new_due_date.day}/{new_due_date.month} (ambos incluidos/tots dos inclosos)',
+      'desc_term_lan1': f'Del {current_school_year.date_init_valid.day}/{current_school_year.date_init_valid.month} al {new_due_date.day}/{new_due_date.month} (ambos incluidos/tots dos inclosos)',
       'title_annex_lan1': f'Anexo convalidaciones {self.abbr} (es)', 
       'file_annex_lan1': f'Anexo convalidaciones {self.abbr}.pdf',   # (es)
+      'title_annex_lan2': f'Annex convalidacions {self.abbr} (va)', 
+      'file_annex_lan2': f'Annex convalidacions {self.abbr}.pdf',   # (va)
       'date_due': int(datetime(year = init_due_date_task.year, 
                                month = init_due_date_task.month, 
                                day = init_due_date_task.day).timestamp()),
@@ -72,6 +74,7 @@ class Course(models.Model):
       }
     
     dict_variables['hash_annex_lan1'], dict_variables['size_annex_lan1'] = self._insert_annex_in_mbz('file_annex_lan1', dict_variables, path_tmp)
+    dict_variables['hash_annex_lan2'], dict_variables['size_annex_lan2'] = self._insert_annex_in_mbz('file_annex_lan2', dict_variables, path_tmp)
     
     try:
       # /misc/moodle/valid_block_mbz/aula_valid

@@ -133,6 +133,13 @@
           <directory>activities/resource_291711</directory>
         </activity>
         <activity>
+          <moduleid>201843</moduleid>
+          <sectionid>41881</sectionid>
+          <modulename>resource</modulename>
+          <title>{{ title_annex_lan2 }}</title>
+          <directory>activities/resource_201843</directory>
+        </activity>
+        <activity>
           <moduleid>309056</moduleid>
           <sectionid>41881</sectionid>
           <modulename>assign</modulename>
@@ -514,6 +521,18 @@
         <level>activity</level>
         <activity>resource_291711</activity>
         <name>resource_291711_userinfo</name>
+        <value>0</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>resource_201843</activity>
+        <name>resource_201843_included</name>
+        <value>1</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>resource_201843</activity>
+        <name>resource_201843_userinfo</name>
         <value>0</value>
       </setting>
       <setting>
