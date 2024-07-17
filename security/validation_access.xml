@@ -143,6 +143,33 @@
       <field name="perm_unlink">1</field>
     </record>
 
+    <!-- ******************************************************** -->
+    <!-- permisos sobre el modelo de expedientes (academic_record) -->
+    <!-- ******************************************************** -->
+
+    <!-- permisos administradores del sistema -->
+    <record id="maya_valid.academic_record_maya_system_admin_access" model="ir.model.access">
+      <field name="name">Acceso de administradores del sistema a los expedientes pendientes</field>
+      <field name="model_id" ref="model_maya_valid_academic_record"/>
+      <field name="group_id" ref="maya_core.group_ROOT"/>
+      <field name="perm_read">1</field>
+      <field name="perm_create">0</field>
+      <field name="perm_write">1</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <!-- permisos Secretaria -->
+    <record id="maya_valid.academic_record_admin_access" model="ir.model.access">
+      <field name="name">Acceso de Secretaria a los expedientes pendientest</field>
+      <field name="model_id" ref="model_maya_valid_academic_record"/>
+      <field name="group_id" ref="maya_core.group_ADMIN"/>
+      <field name="perm_read">1</field>
+      <field name="perm_create">0</field>
+      <field name="perm_write">1</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+
     <!-- ************************************************************************* -->
     <!-- Reglas de registro. Condiciones que se deben dar para que algo ocurra. 
          Se ejecutan registro por registro                                         -->

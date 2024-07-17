@@ -6,3 +6,4 @@ from . import validation_subject
 from . import cron_register_jobs
 from . import course
 from . import school_year
+from . import academic_record

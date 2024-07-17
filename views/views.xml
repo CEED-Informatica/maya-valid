@@ -178,6 +178,17 @@
       </field>
     </record>
 
+    <record model="ir.ui.view" id="maya_valid.academic_record_tree">
+      <field name="name">Lista de convalidaciones/aprobados con anterioridad solicitados</field>
+      <field name="model">maya_valid.academic_record</field>
+      <field name="arch" type="xml">
+        <tree editable="top" limit="20">
+          <field name="state"/>
+          <field name="comments"/>
+        </tree>
+      </field>
+    </record>
+
     <!-- action server para la creación de las tareas moodle de convalidaciones por ciclo-->
     <record model="ir.actions.server" id="maya_valid.action_create_mbz_validation_tasks">
       <field name="name">Genera mbz tareas convalidaciones</field>
@@ -202,6 +213,15 @@
       </field>
     </record>
 
+    <record model="ir.actions.act_window" id="maya_valid.action_academic_records">
+      <field name="name">Expedientes a generar</field>
+      <field name="res_model">maya_valid.academic_record</field>
+      <field name="view_mode">tree</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">Todavía no hay expedientes pendientes</p>
+      </field>
+    </record>
+
     <record model="ir.actions.act_window" id="maya_valid.action_validation_subject">
       <field name="name">Módulos a convalidar por</field>
       <field name="res_model">maya_valid.validation_subject</field>
@@ -221,11 +241,16 @@
 
     <!-- menu categories -->
     <menuitem name="Convalidaciones" id="maya_valid.menu_validations_l0" parent="maya_valid.menu_root"/>
+    <menuitem name="Secretaria" id="maya_valid.menu_administration" parent="maya_valid.menu_root"/>
     <menuitem name="Configuración" id="maya_valid.menu_configuration" parent="maya_valid.menu_root"/>
     
     <!-- menú convalidaciones -->
-    <menuitem name="Por estudios" id="maya_core.menu_validations" parent="maya_valid.menu_validations_l0"
+    <menuitem name="Por estudios" id="maya_valid.menu_validations" parent="maya_valid.menu_validations_l0"
               action="maya_valid.action_validation"/>
+
+    <!-- menú scretaria -->
+    <menuitem name="Expedientes" id="maya_valid.menu_academic_records" parent="maya_valid.menu_administration"
+              action="maya_valid.action_academic_records"/>
     
     <!-- Menu Configuración -->
     <menuitem name="General" id="maya_valid.menu_settings" parent="maya_valid.menu_configuration"
