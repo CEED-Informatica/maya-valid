@@ -224,7 +224,7 @@
     <menuitem name="Configuración" id="maya_valid.menu_configuration" parent="maya_valid.menu_root"/>
     
     <!-- menú convalidaciones -->
-    <menuitem name="Convalidaciones" id="maya_core.menu_validations" parent="maya_valid.menu_validations_l0"
+    <menuitem name="Por estudios" id="maya_core.menu_validations" parent="maya_valid.menu_validations_l0"
               action="maya_valid.action_validation"/>
     
     <!-- Menu Configuración -->
