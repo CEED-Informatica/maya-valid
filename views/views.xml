@@ -168,10 +168,15 @@
             <page string = "Convalidaciones">
               <group col="2">
                 <group>
+                  <separator string="Por estudios" style="padding-bottom:15px"/>
                   <field name="date_init_valid"/>
                   <field name="date_end_valid"/>
                 </group>
-                <group></group>
+                <group>
+                  <separator string="Por acreditación de competencias" style="padding-bottom:15px"/>
+                  <field name="date_init_valid_competency"/>
+                  <field name="date_end_valid_competency"/>
+                </group>
               </group>
             </page>
           </xpath>
