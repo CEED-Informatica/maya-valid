@@ -15,8 +15,8 @@ PDF_VALIDATION_FIELDS_MANDATORY = [
       ('A_Nombre', 'Nombre'),
       ('A_NIA', 'NIA' , 'Número de Identificacion del Alumno/a'),
       ('A_DNI', 'DNI', 'Documento Nacional de Identidad o Número de Identidad de Extranjero/a'),
-      (('B_Requisito1', 'B_Requisito2', 'B_Requisito3', 'B_Requisito4', 'B_Requisito5'), 'Requisitos reunidos'),
-      (('C_Docu1', 'C_Docu2', 'C_Docu3', 'C_Docu4', 'C_Docu5'), 'Documentación aportada'),
+      (('B_Requisito1', 'B_Requisito2', 'B_Requisito3', 'B_Requisito4'), 'Requisitos reunidos'),
+      (('C_Docu1', 'C_Docu2', 'C_Docu3', 'C_Docu4', 'C_Docu5', 'C_Docu6'), 'Documentación aportada'),
       (('C_Modulo1', 'C_Modulo2', 'C_Modulo3', 'C_Modulo4', 
         'C_Modulo5', 'C_Modulo6', 'C_Modulo7', 'C_Modulo8', 
         'C_Modulo9', 'C_Modulo10', 'C_Modulo11', 'C_Modulo12',
@@ -45,7 +45,11 @@ PDF_VALIDATION_FIELDS_PAIRED = [
       ('C_Modulo13', 'C_Modulo13AACO'),
       ('C_Modulo14', 'C_Modulo14AACO'),
       ('C_Modulo15', 'C_Modulo15AACO'),
-      ('C_Modulo16', 'C_Modulo16AACO')  ]
+      ('C_Modulo16', 'C_Modulo16AACO'),
+      ('C_Docu5', 'C_OtrosDocumentos'),
+      ('C_Docu6', 'C_EstudiosCEED'),
+      ('B_Requisito4', 'B_OtrosEstudios'),
+   ]
 
 PDF_FIELD_VALUE = 0
 PDF_FIELD_TYPE = 1
