@@ -22,10 +22,10 @@ PDF_VALIDATION_FIELDS_MANDATORY = [
         'C_Modulo9', 'C_Modulo10', 'C_Modulo11', 'C_Modulo12',
         'C_Modulo13', 'C_Modulo14', 'C_Modulo15', 'C_Modulo16'), 
       'Módulo/s a convalidar o solicitar su aprobado con anterioridad'),
-      ('C_Dia', 'Día de la firma'),
-      ('C_Mes', 'Mes de la firma'),
-      ('C_Anyo', 'Año de la firma'),
-      ('C_Ciudad', 'Ciudad de la firma')]
+      ('E_Dia', 'Día de la firma'),
+      ('E_Mes', 'Mes de la firma'),
+      ('E_Anyo', 'Año de la firma'),
+      ('E_Ciudad', 'Ciudad de la firma')]
 
 # campos del anexo pdf de convalidaciones que deben ir juntos
 # no puede haber valor en el primer item si lo hay en el segundo
@@ -47,8 +47,11 @@ PDF_VALIDATION_FIELDS_PAIRED = [
       ('C_Modulo15', 'C_Modulo15AACO'),
       ('C_Modulo16', 'C_Modulo16AACO'),
       ('C_Docu5', 'C_OtrosDocumentos'),
+      ('C_OtrosDocumentos', 'C_Docu5'),
       ('C_Docu6', 'C_EstudiosCEED'),
+      ('C_EstudiosCEED', 'C_Docu6'),
       ('B_Requisito4', 'B_OtrosEstudios'),
+      ('B_OtrosEstudios', 'B_Requisito4'),
    ]
 
 PDF_FIELD_VALUE = 0
