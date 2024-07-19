@@ -76,6 +76,21 @@ class CronJobDownloadValidations(models.TransientModel):
      
     return users_to_change_due_date
 
+  def _create_pending_academic_record(self, estudies: str, courses: str, validation):
+
+    if len(courses) == 0 or estudies != 'Yes':
+      return 
+    
+    courses_list = courses.split(',')
+    
+    for course in courses_list:
+      academic_record = self.env['maya_valid.academic_record'].create([
+        { 'validation_id': validation.id,
+          'state': '0',
+          'info': course.strip() }])
+
+    return
+
   @api.model
   def cron_download_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id):
 
@@ -456,7 +471,8 @@ class CronJobDownloadValidations(models.TransientModel):
          validation.correction_reason != 'INT' and\
          validation.correction_reason[:3] != 'ERR' and \
         new_documentation:
-        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>Pasa a estado de <strong>en proceso</strong>.</p>')
+        self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE], fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
+        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
         validation.write({ 
           'correction_reason': False,
           'state': '1',
@@ -468,6 +484,7 @@ class CronJobDownloadValidations(models.TransientModel):
         submission.save_grade(2)
       # ha pasado los filtros iniciales => cambio el estado a en proceso
       else:
-        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>Pasa a estado de <strong>en proceso</strong>.</p>')
+        self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE],fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
+        submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
       
     return
