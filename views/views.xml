@@ -188,6 +188,8 @@
       <field name="model">maya_valid.academic_record</field>
       <field name="arch" type="xml">
         <tree editable="top" limit="20">
+          <field name="validation_id" readonly="1"/>
+          <field name="info" readonly="1"/>
           <field name="state"/>
           <field name="comments"/>
         </tree>
