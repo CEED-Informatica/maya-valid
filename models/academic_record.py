@@ -15,7 +15,7 @@ class AcademicRecord(models.Model):
   _description = 'Expedientes académicos de antiguos alumnos del Centro'
   _order = 'write_date'
 
-  validation_id = fields.Many2one('maya_valid.validation', string = 'Estudiante', required = True)
+  validation_id = fields.Many2one('maya_valid.studies_validation', string = 'Estudiante', required = True)
   state = fields.Selection([
       ('0', 'Pendiente'),
       ('1', 'No existe'),
