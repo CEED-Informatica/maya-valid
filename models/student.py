@@ -14,4 +14,5 @@ class Student(models.Model):
 
   # un estudiante podría solicitar convalidaciones de dos ciclos diferentes 
   # (aunque a día de hoy no está permitido)
-  validations_ids = fields.One2many('maya_valid.validation', 'student_id')
+  studies_validations_ids = fields.One2many('maya_valid.studies_validation', 'student_id')
+  competency_validations_ids = fields.One2many('maya_valid.competency_validation', 'student_id')
