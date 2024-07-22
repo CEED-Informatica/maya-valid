@@ -17,13 +17,16 @@ from ...maya_core.support.maya_logger.exceptions import MayaException
 
 _logger = logging.getLogger(__name__)
 
-class Validation(models.Model):
+STUDIES_VAL = 0
+COMPETENCY_VAL = 1
+
+class ValidationAbs(models.AbstractModel):
   """
   Define la entrega de convalidaciones por parte del alumnado
   """
   _name = 'maya_valid.validation'
-  _description = 'Solicitud convalidación'
-  _rec_name = 'student_info' 
+  _description = 'Clase base para definir una solicitud convalidación'
+  _rec_name = 'student_info'
   _order = 'student_surname'
 
   school_year_id = fields.Many2one('maya_core.school_year', string = 'Curso escolar')
@@ -37,22 +40,6 @@ class Validation(models.Model):
   course_id = fields.Many2one('maya_core.course', string = 'Ciclo', required = True)
   course_abbr = fields.Char(string = 'Ciclo', related = 'course_id.abbr')
 
-  validation_subjects_ids = fields.One2many('maya_valid.validation_subject', 'validation_id', 
-     string = 'Módulos que se solicita convalidar')
-
-  validation_subjects_not_for_correction_ids = fields.One2many('maya_valid.validation_subject', 
-  'validation_id', 
-    string = 'Módulos que se solicita convalidar', 
-    domain = [('state', '!=', '1')],
-    compute = '_compute_validation_subjects_not', readonly = False)
-
-  validation_subjects_for_correction_ids = fields.One2many('maya_valid.validation_subject', 'validation_id', 
-    string = 'Módulos pendientes de subsanación',
-    domain = [('state', '=', '1')],
-    compute = '_compute_validation_subjects', readonly = False)
-     
-  validation_subjects_info = fields.Char(string = 'Res. / Rev. / Fin. / Sol.', compute = '_compute_validation_subjects_info')
-
   # aporta información extra sobre el estado de la convalidación  
   situation = fields.Selection([
       ('0', ''),
@@ -64,28 +51,6 @@ class Validation(models.Model):
       ], string = 'Situación', default = '0',
       readonly = True)
 
-  # TODO que hacer con instancia superior si tardan en responder??
-  # una opción es pasado un tiempo enviar el mail de confirmación al alumno
-  # y finalizarla parcialmente
-  state = fields.Selection([
-      ('0', 'Sin procesar'),
-      ('1', 'En proceso'),
-      ('2', 'Subsanación'),
-      ('3', 'Instancia superior'),
-      ('4', 'Subsan. / Inst. superior'),
-      ('5', 'Resuelta'),
-      ('6', 'En proceso de revisión'),
-      ('7', 'En proceso de revisión (parcial)'), # algunas revisadas, otras aun resueltas y algunas elevadas a una instancia superior
-      ('8', 'Revisada'),
-      ('9', 'Revisada parcialmente'),
-      ('10', 'En proceso de finalización (parcial)'),
-      ('11', 'Finalizada parcialmente'),
-      ('12', 'En proceso de finalización'),
-      ('13', 'Finalizada'), # todas las convalidaciones finalizadas pero sin notificación al alumno
-      ('14', 'Cerrada'),
-      ], string ='Estado', help = 'Estado de la convalidación', 
-      default = '0', compute = '_compute_state', store = True)
-  
   # fecha de solicitud de la subsanación
   correction_date = fields.Date(string = 'Fecha subsanación', 
                                 help = 'Fecha de publicación de la subsanación')
@@ -163,10 +128,9 @@ class Validation(models.Model):
           if val[2] == False:
             raise ValidationError('Sólo se permite una subsanación. Todas las convalidaciones tienen, por tanto, que estar resueltas o enviadas a una instancia superior')
 
-        
         vals['situation'] = '0'
 
-    return super(Validation, self).write(vals)
+    return super(ValidationAbs, self).write(vals)
 
   def create_correction(self, reason, comment = '') -> str:
     """
@@ -194,7 +158,7 @@ class Validation(models.Model):
           <p><strong>ATENCIÓN:</strong> La notificación previa fue enviada de manera errónea debido a un error administrativo. Esta notificación sustituye a la anterior. Disculpe las molestias</p>"""
 
     if reason == 'ERR1':
-      body = prebody + '<p>Su convalidación se encuentra en estado: <strong>EN PROCESO</strong></p>.'
+      body = prebody + '<p>Su convalidación se encuentra en estado: <strong>EN TRÁMITE</strong></p>.'
 
       self.write({ 
         'correction_reason': False,
@@ -306,13 +270,6 @@ class Validation(models.Model):
       else: 
         record.student_info = '(' + record.student_nia + ') ' + record.student_surname + ', ' + record.student_name
 
-  def _compute_validation_subjects_info(self):
-    for record in self:
-        num_resolved = len([val for val in record.validation_subjects_ids if int(val.state) >= 3])
-        num_reviewed = len([val for val in record.validation_subjects_ids if int(val.state) == 4 or int(val.state) >= 6])
-        num_finished = len([val for val in record.validation_subjects_ids if int(val.state) >= 6])
-        record.validation_subjects_info = f'{num_resolved} / {num_reviewed} / {num_finished} / {len(record.validation_subjects_ids)}'
-
   @api.depends('validation_subjects_not_for_correction_ids')
   def _compute_validation_subjects(self):
     #for validation in self:
@@ -377,11 +334,18 @@ class Validation(models.Model):
     else:
       self.sign_state = False
   
-  def download_validation_action(self):
+  def download_validation_action(type: int, self):
     """
     Descarga la última versión de la documentación
     """
     self.ensure_one() # esta función sólo puede ser llamada por un único registro, no por un recordset
+
+    subpath = ''
+
+    if type == STUDIES_VAL:
+      subpath = 'estudios'
+    elif type == COMPETENCY_VAL:
+      subpath = 'competencias'
 
     # el acceso a ir.config_parameter sólo es posible desde el administrador. 
     # para que un usuario no admin (por ejemplo un convalidador) pueda acceder a descargar la documuentación
@@ -402,7 +366,7 @@ class Validation(models.Model):
     else:
       current_school_year = current_sy[0]
 
-    path = os.path.join(validations_path, 
+    path = os.path.join(validations_path, subpath, 
           '%s_%s' % (current_school_year.date_init.year, current_school_year.date_init.year + 1), 
           self.course_abbr) 
 
@@ -429,23 +393,6 @@ class Validation(models.Model):
     except Exception as e:
       _logger.error('Error descargando el fichero:' + str(e))
       return {}
-      """ return { 
-            'warning': {
-              'title': "¡Atención!", 
-              'message': "Esta convalidación ya ha sido notificada al estudiante. Cambiar su contenido implica la notificación del cambio en cuanto se realice la grabación"
-              }} """
-      """ return {
-        'type': 'ir.actions.act_window',
-        'target': 'new',
-        'context': {
-          "warning": {
-            'title': 'Atención',
-            'message': 'El fichero no puede ser descargado: '
-          }
-          
-          }
-        },
-      """
   
     self.documentation = encode_data
 
@@ -457,6 +404,11 @@ class Validation(models.Model):
 
   @api.depends('validation_subjects_ids')
   def _compute_state(self):
+    '''
+    Recalcula el estado de la convalidacion general (la instancia).
+    Para convalidaciones por experiencia el estado de revisado no se utiliza, pero en principio no 
+    afecta al funcionamiento de la función.
+    '''
     for record in self:  
       all_noprocess = all(val.state == '0' for val in record.validation_subjects_ids)
       any_noprocess = any(val.state == '0' for val in record.validation_subjects_ids)
