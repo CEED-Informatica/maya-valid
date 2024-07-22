@@ -298,7 +298,7 @@ class ValidationSubject(models.Model):
       if int(record.state) < 4 and int(record.validation_id.state) < 6 and self.env.user.has_group('maya_valid.group_VALID'):
         record.is_read_only = False 
 
-  def _create_validations(self):
+  """ def _create_validations(self):
     validations_path = self.env['res.config_parameter'].sudo().get_param('validation_path') or None
     if validations_path == None:
         self._logger.error('El directorio de convalidaciones no está definido')
@@ -313,5 +313,5 @@ class ValidationSubject(models.Model):
 
       for file_path in os.listdir(validations_path_course):
         if os.path.isfile(os.path.join(validations_path_course, file_path)):
-          files.append(file_path) # aunque mejor hacer ya la descompresion, no?
+          files.append(file_path) # aunque mejor hacer ya la descompresion, no? """
 
