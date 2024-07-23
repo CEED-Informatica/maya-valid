@@ -12,7 +12,7 @@ class CronJobCheckDeadlineValidations(models.TransientModel):
   @api.model
   def cron_check_deadline_validations(self):
     today = date.today()
-    validations = self.env['maya_valid.validation'].search([])
+    validations = self.env['maya_valid.validation'].search(['validation_type','=',0])
 
     updated_validations = ''
     for val in validations:
@@ -22,5 +22,16 @@ class CronJobCheckDeadlineValidations(models.TransientModel):
         })
         updated_validations += f'{val["course_abbr"]}/studend_id: {val["student_id"].id},'
 
+    _logger.info('Subsanaciones por estudios fuera de plazo: '+ updated_validations)
 
-    _logger.info('Subsanaciones fuera de plazo: '+ updated_validations)
+    validations = self.env['maya_valid.validation'].search(['validation_type','=', 1])
+
+    updated_validations = ''
+    for val in validations:
+      if val["correction_date_end"] != False and today > val["correction_date_end"]:
+        val.write({
+          'situation': '4'  
+        })
+        updated_validations += f'{val["course_abbr"]}/studend_id: {val["student_id"].id},'
+
+    _logger.info('Subsanaciones por competencias fuera de plazo: '+ updated_validations)
