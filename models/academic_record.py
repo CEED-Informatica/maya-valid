@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields
+from datetime import date
 
 import logging
 
@@ -23,3 +24,19 @@ class AcademicRecord(models.Model):
   
   info = fields.Text(string = 'Ciclo/curso', required = True)
   comments = fields.Text(string = 'Comentarios')
+
+  generator_id = fields.Many2one('maya_core.employee', string = 'Generado por')
+  generator_date_id = fields.Date(string = 'Fecha generación') 
+
+  def write(self, vals):
+    """
+    Actualiza en la base de datos un registro
+    """
+   
+    today = date.today()
+    current_employee = self.env.user.maya_employee_id
+  
+    vals['generator_id'] = current_employee
+    vals['generator_date_id'] = today
+
+    return super(AcademicRecord, self).write(vals)
