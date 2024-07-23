@@ -27,8 +27,8 @@ from ...support import constants
 
 _logger = logging.getLogger(__name__)
 
-class CronJobDownloadValidations(models.TransientModel):
-  _name = 'maya_valid.cron_job_download_validations'
+class CronJobDownloadStudiesValidations(models.TransientModel):
+  _name = 'maya_valid.cron_job_download_studies_validations'
 
   def _assigns_end_date_validation_period(self, conn, validation_classroom_id, subject_id, course_id, current_school_year):
     """
