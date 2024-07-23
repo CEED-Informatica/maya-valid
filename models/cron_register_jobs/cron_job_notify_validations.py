@@ -22,7 +22,7 @@ class CronJobNotifyValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_notify_validations'
 
   @api.model
-  def cron_notify_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, correction_notification =  False):
+  def cron_notify_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, type = 0, correction_notification =  False):
     """
     Publica notificaciones sobre las convalidaciones 
     correction notification indica si es una notificación para realizar una corrección sobre una notificación anterior
@@ -40,10 +40,18 @@ class CronJobNotifyValidations(models.TransientModel):
       _logger.error("CRON: course no definido")
       return
     
-    if not correction_notification:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id)])
+    model = ''
+    extra_info = ''
+    if type == 0:
+      model = 'maya_valid.studies_validation'
+      extra_info = '<p>Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre).</p>'
     else:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('situation','=', '5')])
+      model = 'maya_valid.competency_validation'
+    
+    if not correction_notification:
+      validations = self.env[model].search([('course_id', '=', course_id)])
+    else:
+      validations = self.env[model].search([('course_id', '=', course_id), ('situation','=', '5')])
 
     if len(validations) == 0:
       return
@@ -100,14 +108,14 @@ class CronJobNotifyValidations(models.TransientModel):
       # obtengo la primera entrega que tenga como estudiante al que se indica en la convalidación
       submission = next((sub for sub in submissions if sub.userid == int(validation.student_id.moodle_id)), None)
       if submission == None:
-        _logger.error(f'No es posible encontrar en la tarea de Moodle {validation_task_id} la entrega del usuario id A{submission.user_id}:A{validation.student_id}')
+        _logger.error(f'No es posible encontrar en la tarea de Moodle {validation_task_id} la entrega del usuario id A{submission.user_id}:M{validation.student_id}')
         continue
 
       # está en estado de subsanación y el alumno no ha sido avisado
       if validation.state == '2' and validation.situation == '1':
         submission.save_grade(3, new_attempt = True, 
                                  feedback = validation.create_correction('INT',
-                                                                         '<p>Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre).</p>'))
+                                                                         extra_info))
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
