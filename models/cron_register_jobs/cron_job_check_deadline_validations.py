@@ -6,8 +6,8 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class CronJobCheckDeadlineStudiesValidations(models.TransientModel):
-  _name = 'maya_valid.cron_job_check_deadline_studies_validations'
+class CronJobCheckDeadlineValidations(models.TransientModel):
+  _name = 'maya_valid.cron_job_check_deadline_validations'
   
   @api.model
   def cron_check_deadline_validations(self):
