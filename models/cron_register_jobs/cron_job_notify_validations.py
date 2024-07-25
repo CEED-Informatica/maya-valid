@@ -15,6 +15,7 @@ from ....maya_core.models.cron_register_jobs.cron_job_enrol_users import CronJob
 
 from ....maya_core.support.maya_logger.exceptions import MayaException
 
+from validation import STUDIES_VAL, COMPETENCY_VAL
 
 _logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ class CronJobNotifyValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_notify_validations'
 
   @api.model
-  def cron_notify_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, correction_notification =  False):
+  def cron_notify_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, type = 0, correction_notification =  False):
     """
     Publica notificaciones sobre las convalidaciones 
     correction notification indica si es una notificación para realizar una corrección sobre una notificación anterior
@@ -41,9 +42,9 @@ class CronJobNotifyValidations(models.TransientModel):
       return
     
     if not correction_notification:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id)])
+      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('validation_type','=', type)])
     else:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('situation','=', '5')])
+      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('situation','=', '5'), ('validation_type','=', type)])
 
     if len(validations) == 0:
       return
@@ -94,6 +95,10 @@ class CronJobNotifyValidations(models.TransientModel):
                       second = 0).timestamp())     
     
     submissions = assignments[0].submissions()
+
+    extra_info = ''
+    if type == STUDIES_VAL:    
+      extra_info = '<p>Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre).</p>'
     
     for validation in validations:
 
@@ -106,8 +111,7 @@ class CronJobNotifyValidations(models.TransientModel):
       # está en estado de subsanación y el alumno no ha sido avisado
       if validation.state == '2' and validation.situation == '1':
         submission.save_grade(3, new_attempt = True, 
-                                 feedback = validation.create_correction('INT',
-                                                                         '<p>Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre).</p>'))
+                                 feedback = validation.create_correction('INT', extra_info))
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
