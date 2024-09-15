@@ -108,6 +108,7 @@ class CronJobNotifyValidations(models.TransientModel):
         submission.save_grade(3, new_attempt = True, 
                                  feedback = validation.create_correction('INT',
                                                                          '<p>Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre).</p>'))
+        submission.unlock()
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
@@ -117,6 +118,7 @@ class CronJobNotifyValidations(models.TransientModel):
       # está en estado de proceso, instancia superior o resuelto y el alumno había sido notificado de una subsanación
       if validation.state in ('1','3','5') and validation.situation == '5':
         submission.save_grade(2, new_attempt = False, feedback = validation.create_correction('ERR1'))
+        submission.lock()
         # submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
@@ -126,6 +128,7 @@ class CronJobNotifyValidations(models.TransientModel):
       # está en estado de subsanación o subsanacion/instancia superior y el alumno había sido notificado de una subsanación
       if validation.state in('2','4') and validation.situation == '5':
         submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ERR2'))
+        submission.unlock()
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
@@ -138,3 +141,5 @@ class CronJobNotifyValidations(models.TransientModel):
         validation.write({
           'state': '14'  
         })
+        submission.lock()
+

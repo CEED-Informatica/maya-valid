@@ -473,6 +473,7 @@ class CronJobDownloadValidations(models.TransientModel):
         new_documentation:
         self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE], fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
         submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
+        submission.lock()
         validation.write({ 
           'correction_reason': False,
           'state': '1',
@@ -486,5 +487,6 @@ class CronJobDownloadValidations(models.TransientModel):
       else:
         self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE],fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
         submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
-      
+        submission.lock()
+        
     return
