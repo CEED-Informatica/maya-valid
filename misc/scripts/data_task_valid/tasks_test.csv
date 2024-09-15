@@ -1,2 +1,4 @@
 id,key,description,course_abbr,classroom_code 
 1,validation,Entrega de convalidaciones y aprobados con anterioridad,DAM,SEG9_CEE_46025799_2022_836104_TU02CF
+2,competence,Entrega de convalidaciones por acreditación de competencias,DAM,SEG9_CEE_46025799_2022_836104_TU02CF
+3,validation_claim,Entrega reclamación resolución convalidaciones,DAM,SEG9_CEE_46025799_2022_836104_TU02CF
