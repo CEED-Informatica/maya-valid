@@ -82,7 +82,8 @@ class Validation(models.Model):
       ('11', 'Finalizada parcialmente'),
       ('12', 'En proceso de finalización'),
       ('13', 'Finalizada'), # todas las convalidaciones finalizadas pero sin notificación al alumno
-      ('14', 'Cerrada'),
+      ('14', 'Cerrada parcialmente'), # solo se indica el estado, no se hace nada con él
+      ('15', 'Cerrada'),
       ], string ='Estado', help = 'Estado de la convalidación', 
       default = '0', compute = '_compute_state', store = True)
   
@@ -468,7 +469,7 @@ class Validation(models.Model):
       any_reviewed = any(val.state == '4' for val in record.validation_subjects_ids)
       any_finished = any(val.state == '6' for val in record.validation_subjects_ids)
       all_finished = all(val.state == '6' for val in record.validation_subjects_ids)
-      all_closed = all(val.state == '7' for val in record.validation_subjects_ids) or (all_finished and record.state == '14')
+      all_closed = all(val.state == '7' for val in record.validation_subjects_ids) or (all_finished and record.state == '15')
 
       # si está ya notificado al estudiante o estaba en subsanación o finalizada o instancia superior
       if record.situation == '2':
@@ -540,7 +541,7 @@ class Validation(models.Model):
         continue
       
       if all_closed:
-        record.state = '14'
+        record.state = '15'
         continue
 
       # si todas finalizadas -> finalizada
