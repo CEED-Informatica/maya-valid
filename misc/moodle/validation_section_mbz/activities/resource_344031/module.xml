@@ -16,7 +16,7 @@
   <completiongradeitemnumber>$@NULL@$</completiongradeitemnumber>
   <completionview>0</completionview>
   <completionexpected>0</completionexpected>
-  <availability>{"op":"&amp;","c":[{"type":"grade","id":66969,"min":3}],"showc":[false]}</availability>
+  <availability>{"op":"&amp;","c":[{"type":"grade","id":66969,"min":75}],"showc":[false]}</availability>
   <showdescription>0</showdescription>
   <tags>
   </tags>
