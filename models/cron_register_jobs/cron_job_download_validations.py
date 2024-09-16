@@ -25,7 +25,7 @@ from ...support.fitz_pdf_templates import PDF_NOFIELDS_FITZ_VALIDATION, PDF_NOFI
 from ...support.constants import PDF_VALIDATION_FIELDS_MANDATORY, PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY
 from ...support import constants
 
-from validation import STUDIES_VAL, COMPETENCY_VAL
+from ..validation import STUDIES_VAL, COMPETENCY_VAL
 
 _logger = logging.getLogger(__name__)
 

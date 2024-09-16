@@ -15,7 +15,7 @@ from ....maya_core.models.cron_register_jobs.cron_job_enrol_users import CronJob
 
 from ....maya_core.support.maya_logger.exceptions import MayaException
 
-from validation import STUDIES_VAL, COMPETENCY_VAL
+from ..validation import STUDIES_VAL, COMPETENCY_VAL
 
 _logger = logging.getLogger(__name__)
 
