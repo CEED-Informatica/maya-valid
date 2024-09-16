@@ -17,6 +17,9 @@ from ...maya_core.support.maya_logger.exceptions import MayaException
 
 _logger = logging.getLogger(__name__)
 
+STUDIES_VAL = 0
+COMPETENCY_VAL = 1
+
 class Validation(models.Model):
   """
   Define la entrega de convalidaciones por parte del alumnado
@@ -25,6 +28,9 @@ class Validation(models.Model):
   _description = 'Solicitud convalidación'
   _rec_name = 'student_info' 
   _order = 'student_surname'
+
+  # tipo de convalidacion, por estudios o por experiencia
+  validation_type = fields.Integer(string = 'Tipo')
 
   school_year_id = fields.Many2one('maya_core.school_year', string = 'Curso escolar')
   
@@ -139,8 +145,8 @@ class Validation(models.Model):
   is_state_read_only = fields.Boolean(compute = '_compute_is_state_read_only')
   
   _sql_constraints = [ 
-    ('unique_validation', 'unique(school_year_id, student_id, course_id)', 
-       'Sólo puede haber una convalidación por estudiante, ciclo y curso escolar.'),
+    ('unique_validation', 'unique(school_year_id, student_id, course_id, validation_type)', 
+       'Sólo puede haber una convalidación de un tipo por estudiante, ciclo y curso escolar.'),
   ]
    
   def write(self, vals):

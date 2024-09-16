@@ -209,14 +209,25 @@
     </record>
 
    <!-- actions opening views on models -->
-   <record model="ir.actions.act_window" id="maya_valid.action_validation">
+   <record model="ir.actions.act_window" id="maya_valid.action_studies_validation">
       <field name="name">Convalidaciones</field>
       <field name="res_model">maya_valid.validation</field>
       <field name="view_mode">tree,form</field>
       <field name="context">{'search_default_group_by_course': 1, 'search_default_group_by_state': 1}</field>
-      
+      <field name="domain">[('validation_type', '=', 0)]</field>
       <field name="help" type="html">
-        <p class="o_view_nocontent_smiling_face">Todavía no hay convalidaciones pendientes</p>
+        <p class="o_view_nocontent_smiling_face">Todavía no hay convalidaciones por estudios pendientes</p>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="maya_valid.action_competency_validation">
+      <field name="name">Convalidaciones UC por experiencia</field>
+      <field name="res_model">maya_valid.validation</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'search_default_group_by_course': 1, 'search_default_group_by_state': 1}</field>
+      <field name="domain">[('validation_type', '=', 1)]</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">Todavía no hay convalidaciones por competencias pendientes</p>
       </field>
     </record>
 
@@ -252,8 +263,10 @@
     <menuitem name="Configuración" id="maya_valid.menu_configuration" parent="maya_valid.menu_root"/>
     
     <!-- menú convalidaciones -->
-    <menuitem name="Por estudios" id="maya_valid.menu_validations" parent="maya_valid.menu_validations_l0"
-              action="maya_valid.action_validation"/>
+    <menuitem name="Por estudios" id="maya_valid.menu_studies_validations" parent="maya_valid.menu_validations_l0"
+              action="maya_valid.action_studies_validation"/>
+    <menuitem name="Competencias" id="maya_valid.menu_competency_validations" parent="maya_valid.menu_validations_l0"
+              action="maya_valid.action_competency_validation"/>
 
     <!-- menú scretaria -->
     <menuitem name="Expedientes" id="maya_valid.menu_academic_records" parent="maya_valid.menu_administration"

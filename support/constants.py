@@ -54,5 +54,20 @@ PDF_VALIDATION_FIELDS_PAIRED = [
       ('B_OtrosEstudios', 'B_Requisito4'),
    ]
 
+PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY = [ 
+      ('A_Apellidos', 'Apellidos'),
+      ('A_Nombre', 'Nombre'),
+      ('A_NIA', 'NIA' , 'Número de Identificacion del Alumno/a'),
+      ('A_DNI', 'DNI', 'Documento Nacional de Identidad o Número de Identidad de Extranjero/a'),
+      ('C_Docu1', 'Documentación aportada'),
+      (('C_Modulo1', 'C_Modulo2', 'C_Modulo3', 'C_Modulo4', 
+        'C_Modulo5', 'C_Modulo6', 'C_Modulo7', 'C_Modulo8', 
+        'C_Modulo9', 'C_Modulo10', 'C_Modulo11', 'C_Modulo12'), 
+      'Módulo/s a convalidar'),
+      ('E_Dia', 'Día de la firma'),
+      ('E_Mes', 'Mes de la firma'),
+      ('E_Anyo', 'Año de la firma'),
+      ('E_Ciudad', 'Ciudad de la firma')]
+
 PDF_FIELD_VALUE = 0
 PDF_FIELD_TYPE = 1

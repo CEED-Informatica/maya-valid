@@ -21,13 +21,15 @@ from ....maya_core.support.maya_logger.exceptions import MayaException
 from ....maya_core.support.helper import create_HTML_list_from_list
 from ....maya_core.support.helper import get_data_from_pdf
 from ....maya_core.support.helper import is_set_flag,set_flag
-from ...support.fitz_pdf_templates import PDF_NOFIELDS_FITZ_VALIDATION
-
+from ...support.fitz_pdf_templates import PDF_NOFIELDS_FITZ_VALIDATION, PDF_NOFIELDS_FITZ_COMPETENCY_VALIDATION
+from ...support.constants import PDF_VALIDATION_FIELDS_MANDATORY, PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY
 from ...support import constants
+
+from validation import STUDIES_VAL, COMPETENCY_VAL
 
 _logger = logging.getLogger(__name__)
 
-class CronJobDownloadValidations(models.TransientModel):
+class CronJobDownloadStudiesValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_download_validations'
 
   def _assigns_end_date_validation_period(self, conn, validation_classroom_id, subject_id, course_id, current_school_year):
@@ -92,7 +94,7 @@ class CronJobDownloadValidations(models.TransientModel):
     return
 
   @api.model
-  def cron_download_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id):
+  def cron_download_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, val_type = 0):
 
     # comprobaciones iniciales
     if validation_classroom_id == None:
@@ -130,7 +132,6 @@ class CronJobDownloadValidations(models.TransientModel):
     else:
       current_school_year = current_sy[0]
         
-
     # obtención de las tareas entregadas
     assignments = MayaMoodleAssignments(conn, 
       course_filter=[validation_classroom_id], 
@@ -147,7 +148,12 @@ class CronJobDownloadValidations(models.TransientModel):
                       actualizado los moodle_id dentro de maya'''.
                       format(validation_task_id, validation_classroom_id))
     
-    assignments[0].set_extension_due_date(self._assigns_end_date_validation_period(
+    msg_text = 'estudios' if val_type == STUDIES_VAL else 'UC'
+    chk_fields = PDF_NOFIELDS_FITZ_COMPETENCY_VALIDATION if val_type == COMPETENCY_VAL else PDF_NOFIELDS_FITZ_VALIDATION
+    mandatory_fields = PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY if val_type == COMPETENCY_VAL else PDF_VALIDATION_FIELDS_MANDATORY
+    
+    if val_type == STUDIES_VAL:
+      assignments[0].set_extension_due_date(self._assigns_end_date_validation_period(
         conn, 
         validation_classroom_id, 
         subject_id, 
@@ -176,7 +182,7 @@ class CronJobDownloadValidations(models.TransientModel):
 
       new_documentation = False
 
-      _logger.info("Entrega usuario moodle {}".format(submission.userid))   
+      _logger.info("Entrega convalidaciones {} del usuario moodle {}".format(msg_text, submission.userid))   
       user = MayaMoodleUser.from_userid(conn, submission.userid)   # usuario moodle
       a_user =  CronJobEnrolUsers.enrol_student(self, user, subject_id, course_id)  # usuario maya
   
@@ -187,12 +193,13 @@ class CronJobDownloadValidations(models.TransientModel):
         validation = self.env['maya_valid.validation'].create([
             { 'student_id': a_user.id,
               'course_id': course_id,
+              'validation_type': val_type,
               'attempt_number': submission.attemptnumber + 1,
               'school_year_id': current_school_year.id }])
       else:
         validation = validation_list[0]
 
-        _logger.info("Intento de entrega A{}:M{}".format(validation.attempt_number, submission.attemptnumber + 1))   
+        _logger.info("Intento de entrega de convaldaciones de {} de A{}:M{}".format(msg_text, validation.attempt_number, submission.attemptnumber + 1))   
 
         if validation.attempt_number == submission.attemptnumber + 1: # no ha habido cambios en la entrega
           continue
@@ -236,7 +243,8 @@ class CronJobDownloadValidations(models.TransientModel):
         user.lastname.upper() if user.lastname is not None else 'SIN-APELLIDOS', 
         user.firstname.upper() if user.firstname is not None else 'SIN-NOMBRE')
       
-      filename = '[{}][{}] {}, {}'.format(
+      filename = '{}[{}][{}] {}, {}'.format(
+        'UC ' if val_type == COMPETENCY_VAL else '',
         user.id_,
         submission.attemptnumber + 1,
         user.lastname.upper() if user.lastname is not None else 'SIN-APELLIDOS', 
@@ -288,14 +296,13 @@ class CronJobDownloadValidations(models.TransientModel):
         continue
   
       # datos obligatorios rellenados  
-      fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]),
-                                 PDF_NOFIELDS_FITZ_VALIDATION)
+      fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]), chk_fields)
       _logger.info(fields)
 
       missing_fields = []
-      for mandatory_field in constants.PDF_VALIDATION_FIELDS_MANDATORY:
-        assert isinstance(mandatory_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_MANDATORY. Cada entrada tiene que ser una tupla'
-        assert isinstance(mandatory_field[0], (str, tuple)), f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_MANDATORY. La primera entrada de cada tupla o es una str o una tuple'
+      for mandatory_field in mandatory_fields:
+        assert isinstance(mandatory_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_MANDATORY o constants.PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY. Cada entrada tiene que ser una tupla'
+        assert isinstance(mandatory_field[0], (str, tuple)), f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_MANDATORY o constants.PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY. La primera entrada de cada tupla o es una str o una tuple'
         
         if isinstance(mandatory_field[0], str):
           assert mandatory_field[0] in fields, f'La clave {mandatory_field[0]} no existe en el pdf'
@@ -414,7 +421,11 @@ class CronJobDownloadValidations(models.TransientModel):
             code = fields[key][0][:6]
           else:
             code = fields[key][0][:4]
-          validation_type = fields[key + 'AACO'][0][:2].lower()
+
+          if val_type == STUDIES_VAL:
+            validation_type = fields[key + 'AACO'][0][:2].lower()
+          else: # las competenciales siempre son convalidaciones
+            validation_type = 'CO'
           
           if len(code) == 0:
             continue
@@ -471,7 +482,10 @@ class CronJobDownloadValidations(models.TransientModel):
          validation.correction_reason != 'INT' and\
          validation.correction_reason[:3] != 'ERR' and \
         new_documentation:
-        self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE], fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
+        if val_type == STUDIES_VAL:
+          self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE], fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], 
+                                               validation)
+
         submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
         submission.lock()
         validation.write({ 
@@ -485,7 +499,9 @@ class CronJobDownloadValidations(models.TransientModel):
         submission.save_grade(2)
       # ha pasado los filtros iniciales => cambio el estado a en proceso
       else:
-        self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE],fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
+        if val_type == STUDIES_VAL:
+          self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE],fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
+        
         submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
         submission.lock()
         
