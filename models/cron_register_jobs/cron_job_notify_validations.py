@@ -22,7 +22,7 @@ class CronJobNotifyValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_notify_validations'
 
   @api.model
-  def cron_notify_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, correction_notification =  False):
+  def cron_notify_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, validation_claim_task_id, correction_notification =  False):
     """
     Publica notificaciones sobre las convalidaciones 
     correction notification indica si es una notificación para realizar una corrección sobre una notificación anterior
@@ -82,7 +82,12 @@ class CronJobNotifyValidations(models.TransientModel):
                       actualizado los moodle_id dentro de Maya'''.
                       format(validation_task_id, validation_classroom_id))
     
-    today = date.today()
+    if validation_claim_task_id:
+      claim_assignments = MayaMoodleAssignments(conn, 
+        course_filter=[validation_classroom_id], 
+        assignment_filter=[validation_claim_task_id])
+    
+    today = datetime.now()
 
     # en caso de subsanación se abre un perido de 15 dias naturales
     new_due_date = today + timedelta(days = 15)
@@ -93,6 +98,16 @@ class CronJobNotifyValidations(models.TransientModel):
                       minute = 1,
                       second = 0).timestamp())     
     
+    # limite de la reclamación
+    users_to_change_claim_date = []
+    claim_due_date = today + timedelta(hours = 73)
+    claim_timestamp = int(datetime(year = claim_due_date.year, 
+                      month = claim_due_date.month,
+                      day = claim_due_date.day,
+                      hour = claim_due_date.hour,
+                      minute = 1,
+                      second = 0).timestamp())  
+    
     submissions = assignments[0].submissions()
     
     for validation in validations:
@@ -100,7 +115,7 @@ class CronJobNotifyValidations(models.TransientModel):
       # obtengo la primera entrega que tenga como estudiante al que se indica en la convalidación
       submission = next((sub for sub in submissions if sub.userid == int(validation.student_id.moodle_id)), None)
       if submission == None:
-        _logger.error(f'No es posible encontrar en la tarea de Moodle {validation_task_id} la entrega del usuario id A{submission.user_id}:A{validation.student_id}')
+        _logger.error(f'No es posible encontrar en la tarea de Moodle {validation_task_id} la entrega del usuario id A{submission.user_id}:M{validation.student_id}')
         continue
 
       # está en estado de subsanación y el alumno no ha sido avisado
@@ -139,7 +154,12 @@ class CronJobNotifyValidations(models.TransientModel):
       if validation.state == '13':
         submission.save_grade(4, new_attempt = False, feedback = validation.create_finished_notification_message())
         validation.write({
-          'state': '14'  
+          'state': '15'  
         })
         submission.lock()
 
+        # lo añado a la lista de usuario a los que hay que cambiar la fecha de la reclamación
+        users_to_change_claim_date.append((validation.student_id.moodle_id, claim_timestamp))
+
+    # aquello sobre los que ya se ha finalizado el proceso convalidación se pone fecha al periodo de reclamaciones
+    claim_assignments[0].set_extension_due_date(users_to_change_claim_date)
