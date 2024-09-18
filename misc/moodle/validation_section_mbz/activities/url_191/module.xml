@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module id="201843" version="2021051700">
-  <modulename>resource</modulename>
+<module id="191" version="2021051700">
+  <modulename>url</modulename>
   <sectionid>41881</sectionid>
   <sectionnumber>2</sectionnumber>
-  <idnumber>$@NULL@$</idnumber>
-  <added>1689938612</added>
+  <idnumber></idnumber>
+  <added>1474366022</added>
   <score>0</score>
   <indent>2</indent>
   <visible>1</visible>
@@ -16,7 +16,7 @@
   <completiongradeitemnumber>$@NULL@$</completiongradeitemnumber>
   <completionview>0</completionview>
   <completionexpected>0</completionexpected>
-  <availability>{"op":"&amp;","showc":[false],"c":[{"type":"date","d":"&gt;=","t":{{ date_init_val }} }]}</availability>
+  <availability>$@NULL@$</availability>
   <showdescription>0</showdescription>
   <tags>
   </tags>

@@ -16,7 +16,7 @@
   <completiongradeitemnumber>$@NULL@$</completiongradeitemnumber>
   <completionview>0</completionview>
   <completionexpected>0</completionexpected>
-  <availability>$@NULL@$</availability>
+  <availability>{"op":"&amp;","showc":[false],"c":[{"type":"date","d":"&gt;=","t":{{ date_init_compt_val }} }],"showc":[true]}</availability>
   <showdescription>0</showdescription>
   <tags>
   </tags>

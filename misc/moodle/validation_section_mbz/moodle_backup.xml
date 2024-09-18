@@ -61,6 +61,20 @@
           <directory>activities/url_183994</directory>
         </activity>
         <activity>
+          <moduleid>191</moduleid>
+          <sectionid>41881</sectionid>
+          <modulename>url</modulename>
+          <title>Convalidaciones todofp.es  / Convalidacions todofp.es</title>
+          <directory>activities/url_191</directory>
+        </activity>
+        <activity>
+          <moduleid>192</moduleid>
+          <sectionid>41881</sectionid>
+          <modulename>url</modulename>
+          <title>Convalidaciones Conselleria de Educación / Convalidacions Conselleria d'Educació</title>
+          <directory>activities/url_192</directory>
+        </activity>
+        <activity>
           <moduleid>183996</moduleid>
           <sectionid>41881</sectionid>
           <modulename>resource</modulename>
@@ -187,6 +201,20 @@
           <modulename>label</modulename>
           <title>Plazo abierto / Termini obert</title>
           <directory>activities/label_344019</directory>
+        </activity>
+        <activity>
+          <moduleid>193</moduleid>
+          <sectionid>41881</sectionid>
+          <modulename>resource</modulename>
+          <title>{{ title_annex_compt_lan1 }}</title>
+          <directory>activities/resource_193</directory>
+        </activity>
+        <activity>
+          <moduleid>194</moduleid>
+          <sectionid>41881</sectionid>
+          <modulename>resource</modulename>
+          <title>{{ title_annex_compt_lan2 }}</title>
+          <directory>activities/resource_194</directory>
         </activity>
         <activity>
           <moduleid>319478</moduleid>
@@ -449,6 +477,54 @@
         <level>activity</level>
         <activity>url_183995</activity>
         <name>url_183995_userinfo</name>
+        <value>0</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>url_191</activity>
+        <name>url_191_included</name>
+        <value>1</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>url_191</activity>
+        <name>url_191_userinfo</name>
+        <value>0</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>url_192</activity>
+        <name>url_192_included</name>
+        <value>1</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>url_192</activity>
+        <name>url_192_userinfo</name>
+        <value>0</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>resource_193</activity>
+        <name>resource_193_included</name>
+        <value>1</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>resource_193</activity>
+        <name>resource_193_userinfo</name>
+        <value>0</value>
+      </setting>
+       <setting>
+        <level>activity</level>
+        <activity>resource_194</activity>
+        <name>resource_194_included</name>
+        <value>1</value>
+      </setting>
+      <setting>
+        <level>activity</level>
+        <activity>resource_194</activity>
+        <name>resource_194_userinfo</name>
         <value>0</value>
       </setting>
       <setting>

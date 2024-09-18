@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="15" moduleid="191" modulename="url" contextid="201667">
+  <url id="15">
+    <name>Convalidaciones todofp.es  / Convalidacions todofp.es</name>
+    <intro>&lt;p&gt;Información sobre convalidaciones ofrecida por la página todofp.es del Ministerio de Educación.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Informació sobre convalidacions oferida per la pàgina todofp.es del Ministerio de Educación.&lt;br&gt;&lt;/p&gt;</intro>
+    <introformat>1</introformat>
+    <externalurl>https://www.todofp.es/convalidaciones-equivalencias-homologaciones/convalidaciones.html</externalurl>
+    <display>0</display>
+    <displayoptions>a:1:{s:10:"printintro";i:1;}</displayoptions>
+    <parameters>a:0:{}</parameters>
+    <timemodified>1726608341</timemodified>
+  </url>
+</activity>

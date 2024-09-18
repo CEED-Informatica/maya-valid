@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <activity id="84448" moduleid="344019" modulename="label" contextid="657223">
   <label id="84448">
-    <name>Plazo abierto hasta el {{ desc_term_competency_lan1 }}  /  Termini obert fins al {{ desc_term_competency_lan1 }}</name>
-    <intro>&lt;p style="text-align: center;"&gt;&lt;strong&gt;&lt;span style="font-family: &amp;quot;Trebuchet MS&amp;quot;, Verdana, Arial, Helvetica, sans-serif; font-size: medium; color: rgb(255, 102, 0); --darkreader-inline-color: #f26f19;" data-darkreader-inline-color=""&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;&lt;strong&gt;&lt;span style="font-family: &amp;quot;Trebuchet MS&amp;quot;, Verdana, Arial, Helvetica, sans-serif; font-size: medium; color: rgb(255, 102, 0); --darkreader-inline-color: #f26f19;" data-darkreader-inline-color=""&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;strong&gt;&lt;span data-darkreader-inline-color=""&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;&lt;span&gt;&lt;strong&gt;Plazo abierto / Termini obert&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;br&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;</intro>
+    <name>Plazo competencias</name>
+    <intro>&lt;p style="text-align: center;"&gt;
+    &lt;strong&gt;
+        &lt;span style="font-family: &amp;quot;Trebuchet MS&amp;quot;, Verdana, Arial, Helvetica, sans-serif; font-size: medium; color: rgb(255, 102, 0); --darkreader-inline-color: #f26f19;" data-darkreader-inline-color="" del="" 26="" de="" setembre="" al="" d'octubre="" &lt;="" span=""&gt;
+        {{ desc_term_competency_lan1 }}&lt;/span&gt;&lt;/strong&gt;
+&lt;/p&gt;</intro>
     <introformat>1</introformat>
     <timemodified>1714123482</timemodified>
   </label>

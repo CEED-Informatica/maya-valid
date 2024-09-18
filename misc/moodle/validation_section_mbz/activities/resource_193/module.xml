@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module id="201843" version="2021051700">
+<module id="193" version="2021051700">
   <modulename>resource</modulename>
   <sectionid>41881</sectionid>
   <sectionnumber>2</sectionnumber>
@@ -16,7 +16,7 @@
   <completiongradeitemnumber>$@NULL@$</completiongradeitemnumber>
   <completionview>0</completionview>
   <completionexpected>0</completionexpected>
-  <availability>{"op":"&amp;","showc":[false],"c":[{"type":"date","d":"&gt;=","t":{{ date_init_val }} }]}</availability>
+  <availability>{"op":"&amp;","showc":[false],"c":[{"type":"date","d":"&gt;=","t":{{ date_init_compt_val }} }]}</availability>
   <showdescription>0</showdescription>
   <tags>
   </tags>

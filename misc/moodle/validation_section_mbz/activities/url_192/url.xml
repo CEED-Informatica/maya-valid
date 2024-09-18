@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="16" moduleid="192" modulename="url" contextid="201668">
+  <url id="16">
+    <name>Convalidaciones Conselleria de Educación / Convalidacions Conselleria d'Educació</name>
+    <intro>&lt;p&gt;Información sobre convalidaciones ofrecida por la Conselleria de Educación&lt;br&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Informació sobre convalidacions oferida per la Conselleria d'Educació&lt;br&gt;&lt;/p&gt;</intro>
+    <introformat>1</introformat>
+    <externalurl>https://ceice.gva.es/es/web/formacion-profesional/convalidaciones</externalurl>
+    <display>0</display>
+    <displayoptions>a:1:{s:10:"printintro";i:1;}</displayoptions>
+    <parameters>a:0:{}</parameters>
+    <timemodified>1726608780</timemodified>
+  </url>
+</activity>

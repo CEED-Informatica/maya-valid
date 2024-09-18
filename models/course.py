@@ -61,20 +61,33 @@ class Course(models.Model):
     dict_variables =  {
       'filename': zip_name,
       'num_section': 1, # es necesario crear previamente la sección 1 vacia en Moodle
-      'desc_term_lan1': f'Del {current_school_year.date_init_valid.day}/{current_school_year.date_init_valid.month} al {new_due_date.day}/{new_due_date.month} (ambos incluidos/tots dos inclosos)',
+      'desc_term_lan1': f'Del {current_school_year.date_init_valid.day}/{current_school_year.date_init_valid.month}/{current_school_year.date_init_valid.year} al {current_school_year.date_end_valid.day}/{current_school_year.date_end_valid.month}/{current_school_year.date_end_valid.year} (ambos incluidos/tots dos inclosos)',
       'title_annex_lan1': f'Anexo convalidaciones {self.abbr} (es)', 
       'file_annex_lan1': f'Anexo convalidaciones {self.abbr}.pdf',   # (es)
       'title_annex_lan2': f'Annex convalidacions {self.abbr} (va)', 
       'file_annex_lan2': f'Annex convalidacions {self.abbr}.pdf',   # (va)
+      'title_annex_compt_lan1': f'Anexo convalidaciones competencias {self.abbr} (es)', 
+      'file_annex_compt_lan1': f'Anexo convalidaciones {self.abbr}.pdf',   # (es) TODO pongo por ahora los normales
+      'title_annex_compt_lan2': f'Annex convalidacions competències {self.abbr} (va)', 
+      'file_annex_compt_lan2': f'Annex convalidacions {self.abbr}.pdf',   # (va)
+      'date_init_val': int(datetime(year = current_school_year.date_init_valid.year, 
+                               month = current_school_year.date_init_valid.month, 
+                               day = current_school_year.date_init_valid.day).timestamp()),
+      'date_init_compt_val': int(datetime(year = current_school_year.date_init_valid_competency.year, 
+                               month = current_school_year.date_init_valid_competency.month, 
+                               day = current_school_year.date_init_valid_competency.day).timestamp()),
       'date_due': int(datetime(year = init_due_date_task.year, 
                                month = init_due_date_task.month, 
                                day = init_due_date_task.day).timestamp()),
       'date_due_competency': int(datetime(year = init_due_date_task.year + 1, day = 15, month=6).timestamp()),
-      'desc_term_competency_lan1': f'15/06/{init_due_date_task.year + 1}'
+      'desc_term_competency_lan1': f'Del {current_school_year.date_init_valid_competency.day}/{current_school_year.date_init_valid_competency.month}/{current_school_year.date_init_valid_competency.year} al {current_school_year.date_end_valid_competency.day}/{current_school_year.date_end_valid_competency.month}/{current_school_year.date_end_valid_competency.year} (ambos incluidos/tots dos inclosos)'
       }
     
     dict_variables['hash_annex_lan1'], dict_variables['size_annex_lan1'] = self._insert_annex_in_mbz('file_annex_lan1', dict_variables, path_tmp)
     dict_variables['hash_annex_lan2'], dict_variables['size_annex_lan2'] = self._insert_annex_in_mbz('file_annex_lan2', dict_variables, path_tmp)
+
+    dict_variables['hash_annex_compt_lan1'], dict_variables['size_annex_compt_lan1'] = self._insert_annex_in_mbz('file_annex_compt_lan1', dict_variables, path_tmp)
+    dict_variables['hash_annex_compt_lan2'], dict_variables['size_annex_compt_lan2'] = self._insert_annex_in_mbz('file_annex_compt_lan2', dict_variables, path_tmp)
     
     try:
       # /misc/moodle/valid_block_mbz/aula_valid
