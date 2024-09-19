@@ -29,7 +29,7 @@ from ..validation import STUDIES_VAL, COMPETENCY_VAL
 
 _logger = logging.getLogger(__name__)
 
-class CronJobDownloadStudiesValidations(models.TransientModel):
+class CronJobDownloadValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_download_validations'
 
   def _assigns_end_date_validation_period(self, conn, validation_classroom_id, subject_id, course_id, current_school_year):
@@ -56,11 +56,12 @@ class CronJobDownloadStudiesValidations(models.TransientModel):
         _logger.warning('Incongruencia en la matricula. En el aula de Moodle de módulo (id Maya: {subject_id}) hay matriculado un alumno (id Maya: {a_user.id}) que no lo está en Maya')
         continue
 
-      # aún no tiene abierto el periodo de convalidaciones
+      # aún no tiene abierto el periodo de convalidaciones. 
+      # TODO alumno en dos ciclos!!!. mejor seria poner esto en subject_student_rel
       if not is_set_flag(subject_student[0].status_flags,constants.VALIDATION_PERIOD_OPEN):
         # asigno un periodo de 30 dias de plazo
-        if current_school_year.date_init_lective > today: # el proceso ha ocurrido antes de abrir las aulas virtuales
-          new_due_date = current_school_year.date_init_lective + timedelta(days = 30)
+        if current_school_year.date_init_valid > today: # el proceso ha ocurrido antes de abrir las aulas virtuales
+          new_due_date = current_school_year.date_init_valid + timedelta(days = 30)
         else:
           new_due_date = today + timedelta(days = 30)
           
@@ -490,7 +491,7 @@ class CronJobDownloadStudiesValidations(models.TransientModel):
         submission.lock()
         validation.write({ 
           'correction_reason': False,
-          'state': '1',
+          'state': '1',  # creo que deberia ser 0 :S, necesito madurarlo
           'correction_date': False
         })
       # subsanación por falta de documentación de uno de los módulos
