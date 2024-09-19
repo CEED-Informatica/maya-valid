@@ -8,6 +8,7 @@ Para el correcto funcionamento de **Maya | Valid** con Moodle, es necesario:
 
     > Dichas aulas tienen que esta creadas en Maya. Ver [Creación de las aulas virtuales](https://CEED-informatica.github.io/maya-core/docs/maya/connect-maya-moodle#creacion-de-las-aulas-virtuales)
 
+    - modificar la fecha de inicio de curso para que coincida con la fecha de inicio de curso indicada en Maya. Como hora poner 00:01
     - añadir una sección
     - moverla hasta la primera posición
     - restaurar el fichero _.mbz_ descargado en el paso 1. 
