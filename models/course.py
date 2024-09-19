@@ -61,6 +61,9 @@ class Course(models.Model):
     dict_variables =  {
       'filename': zip_name,
       'num_section': 1, # es necesario crear previamente la sección 1 vacia en Moodle
+      'startdate_ini_course': int(datetime(year = current_school_year.date_init_lective.year, 
+                               month = current_school_year.date_init_lective.month, 
+                               day = current_school_year.date_init_lective.day).timestamp()),
       'desc_term_lan1': f'Del {current_school_year.date_init_valid.day}/{current_school_year.date_init_valid.month}/{current_school_year.date_init_valid.year} al {current_school_year.date_end_valid.day}/{current_school_year.date_end_valid.month}/{current_school_year.date_end_valid.year} (ambos incluidos/tots dos inclosos)',
       'title_annex_lan1': f'Anexo convalidaciones {self.abbr} (es)', 
       'file_annex_lan1': f'Anexo convalidaciones {self.abbr}.pdf',   # (es)

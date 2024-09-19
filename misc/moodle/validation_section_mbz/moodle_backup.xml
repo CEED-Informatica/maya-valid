@@ -16,7 +16,7 @@
     <original_course_format>topics</original_course_format>
     <original_course_fullname>Tutoria DAM 23/24</original_course_fullname>
     <original_course_shortname>SEG9_CEE_46025799_2022_836104_TU02CF</original_course_shortname>
-    <original_course_startdate>1695024120</original_course_startdate>
+    <original_course_startdate>{{ startdate_ini_course }}</original_course_startdate>
     <original_course_enddate>0</original_course_enddate>
     <original_course_contextid>180222</original_course_contextid>
     <original_system_contextid>1</original_system_contextid>

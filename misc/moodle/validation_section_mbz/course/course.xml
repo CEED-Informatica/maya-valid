@@ -8,7 +8,7 @@
   <format>topics</format>
   <showgrades>1</showgrades>
   <newsitems>1</newsitems>
-  <startdate>1695024120</startdate>
+  <startdate>{{ startdate_ini_course }}</startdate>
   <enddate>0</enddate>
   <marker>0</marker>
   <maxbytes>0</maxbytes>
