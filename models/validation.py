@@ -67,6 +67,7 @@ class Validation(models.Model):
       ('3', 'Nuevo envio de documentación'),
       ('4', 'Subsanación fuera de plazo'),
       ('5', 'Notificación rectificada (pendiente envio)'),
+      ('6', 'Pendiente expediente CEED'),
       ], string = 'Situación', default = '0',
       readonly = True)
 
@@ -90,6 +91,7 @@ class Validation(models.Model):
       ('13', 'Finalizada'), # todas las convalidaciones finalizadas pero sin notificación al alumno
       ('14', 'Cerrada parcialmente'), # solo se indica el estado, no se hace nada con él
       ('15', 'Cerrada'),
+      ('16', 'Reclamación'),
       ], string ='Estado', help = 'Estado de la convalidación', 
       default = '0', compute = '_compute_state', store = True)
   
@@ -135,7 +137,7 @@ class Validation(models.Model):
   sign_state = fields.Boolean(compute = '_compute_sign_info')
 
   def _default_locked(self):
-    if (self.state == '2' and self.situation == '2') or self.situation == '5': 
+    if (self.state == '2' and self.situation == '2') or self.situation == '5' or self.situation == '6': 
       return True
     else:
       return False
@@ -345,6 +347,10 @@ class Validation(models.Model):
   def _compute_info(self):
     self.ensure_one()
 
+    if int(self.situation) == 6:
+      self.info = f'La convalidación se encuentra en estado de \'{dict(self._fields["situation"].selection).get(self.situation)}\' y no puede ser modificada'
+      return
+
     if int(self.state) == 2 and self.situation == '2':
       unlocked_info = ''
       if any(val.is_read_only == False for val in self.validation_subjects_ids):
@@ -476,6 +482,9 @@ class Validation(models.Model):
       any_finished = any(val.state == '6' for val in record.validation_subjects_ids)
       all_finished = all(val.state == '6' for val in record.validation_subjects_ids)
       all_closed = all(val.state == '7' for val in record.validation_subjects_ids) or (all_finished and record.state == '15')
+
+      if record.situation == '6':
+        continue
 
       # si está ya notificado al estudiante o estaba en subsanación o finalizada o instancia superior
       if record.situation == '2':

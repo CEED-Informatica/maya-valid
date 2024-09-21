@@ -79,10 +79,15 @@ class CronJobDownloadValidations(models.TransientModel):
      
     return users_to_change_due_date
 
-  def _create_pending_academic_record(self, estudies: str, courses: str, validation):
+  def _create_pending_academic_record(self, estudies: str, courses: str, validation) -> str:
+    """ 
+    Crea los expedientes académicos pendientes de ser generados en el propio centro
+    En caso de que existan devuelve un 6  (situación de la convalidación)
+    En caso de que no hayan devuelve un 0
+    """
 
     if len(courses) == 0 or estudies != 'Yes':
-      return 
+      return '0'
     
     courses_list = courses.split(',')
     
@@ -92,7 +97,7 @@ class CronJobDownloadValidations(models.TransientModel):
           'state': '0',
           'info': course.strip() }])
 
-    return
+    return '6'
 
   @api.model
   def cron_download_validations(self, validation_classroom_id, course_id, subject_id, validation_task_id, val_type = 0):
@@ -367,33 +372,33 @@ class CronJobDownloadValidations(models.TransientModel):
         continue
 
       # Comprobación de firma digital
-      buffer = BytesIO()
-      pycurl_connex = pycurl.Curl()
-      pycurl_connex.setopt(pycurl_connex.URL, 'http://pdf-signature-validator:80/verify_signature')
-      pycurl_connex.setopt(pycurl_connex.POST, 1)
-      pycurl_connex.setopt(pycurl_connex.HTTPPOST, 
-                           [("file", (pycurl_connex.FORM_FILE, 
-                                      os.path.join(path_user_submission, annex_file[0])))])
-      pycurl_connex.setopt(pycurl_connex.WRITEDATA, buffer)
+      # buffer = BytesIO()
+      # pycurl_connex = pycurl.Curl()
+      # pycurl_connex.setopt(pycurl_connex.URL, 'http://pdf-signature-validator:80/verify_signature')
+      # pycurl_connex.setopt(pycurl_connex.POST, 1)
+      # pycurl_connex.setopt(pycurl_connex.HTTPPOST, 
+      #                      [("file", (pycurl_connex.FORM_FILE, 
+      #                                 os.path.join(path_user_submission, annex_file[0])))])
+      # pycurl_connex.setopt(pycurl_connex.WRITEDATA, buffer)
       
-      pycurl_connex.perform()
-      pycurl_connex.close()
+      # pycurl_connex.perform()
+      # pycurl_connex.close()
 
-      response_curl = buffer.getvalue().decode('utf-8')
-      response_curl_data = json.loads(response_curl)
+      # response_curl = buffer.getvalue().decode('utf-8')
+      # response_curl_data = json.loads(response_curl)
 
-      validation.sign_data = response_curl
-      if 'error' in response_curl_data:
-        if response_curl_data['error'] == 'PDFSIG_ERROR' or \
-           response_curl_data['error'] == 'NOT_SIGNED' or \
-           response_curl_data['error'] == 'EXPIRED_CERTIFICATE' or \
-           response_curl_data['error'] == 'REVOKED_CERTIFICATE' or \
-           response_curl_data['error'] == 'NOT_VALID_CERTIFICATE':
-           # response_curl_data['error'] == 'INVALID_SIGNATURE'
-            _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}. Error: {response_curl_data["error_message"]} ')
-            submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
-            submission.set_extension_due_date(to = new_timestamp)
-            continue
+      # validation.sign_data = response_curl
+      # if 'error' in response_curl_data:
+      #   if response_curl_data['error'] == 'PDFSIG_ERROR' or \
+      #      response_curl_data['error'] == 'NOT_SIGNED' or \
+      #      response_curl_data['error'] == 'EXPIRED_CERTIFICATE' or \
+      #      response_curl_data['error'] == 'REVOKED_CERTIFICATE' or \
+      #      response_curl_data['error'] == 'NOT_VALID_CERTIFICATE':
+      #      # response_curl_data['error'] == 'INVALID_SIGNATURE'
+      #       _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}. Error: {response_curl_data["error_message"]} ')
+      #       submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
+      #       submission.set_extension_due_date(to = new_timestamp)
+      #       continue
     
 
       # obtengo el NIA del formulario
@@ -477,6 +482,7 @@ class CronJobDownloadValidations(models.TransientModel):
       # añade nuevos registro, pero los mantiene en "el aire" hasta que se grabe el school_year 
       validation.validation_subjects_ids = validation_subjects
 
+      situation = '0' # por defecto
       ## llegados a este punto puden pasar varias cosas en función de la situaciíon de la convalidación
       # Habia una subsanación debida a un error general: no firmada, faltan campos, etc
       if validation.correction_reason != False and \
@@ -484,7 +490,7 @@ class CronJobDownloadValidations(models.TransientModel):
          validation.correction_reason[:3] != 'ERR' and \
         new_documentation:
         if val_type == STUDIES_VAL:
-          self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE], fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], 
+          situation = self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE], fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], 
                                                validation)
 
         submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
@@ -492,6 +498,7 @@ class CronJobDownloadValidations(models.TransientModel):
         validation.write({ 
           'correction_reason': False,
           'state': '1',  # creo que deberia ser 0 :S, necesito madurarlo
+          'situation': situation,
           'correction_date': False
         })
       # subsanación por falta de documentación de uno de los módulos
@@ -501,9 +508,13 @@ class CronJobDownloadValidations(models.TransientModel):
       # ha pasado los filtros iniciales => cambio el estado a en proceso
       else:
         if val_type == STUDIES_VAL:
-          self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE],fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
+          situation = self._create_pending_academic_record(fields['C_Docu6'][constants.PDF_FIELD_VALUE],fields['C_EstudiosCEED'][constants.PDF_FIELD_VALUE], validation)
         
         submission.save_grade(2, feedback = '<h3>La documentación ha sido aceptada a trámite.<h3><p>La solicitud pasa a estado de <strong>en trámite</strong>.</p>')
         submission.lock()
+
+        validation.write({ 
+          'situation': situation,
+        })
         
     return
