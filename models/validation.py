@@ -68,6 +68,7 @@ class Validation(models.Model):
       ('4', 'Subsanación fuera de plazo'),
       ('5', 'Notificación rectificada (pendiente envio)'),
       ('6', 'Pendiente expediente CEED'),
+      ('7', 'Expediente no localizado'),
       ], string = 'Situación', default = '0',
       readonly = True)
 
@@ -350,6 +351,10 @@ class Validation(models.Model):
     if int(self.situation) == 6:
       self.info = f'La convalidación se encuentra en estado de \'{dict(self._fields["situation"].selection).get(self.situation)}\' y no puede ser modificada'
       return
+    
+    if int(self.situation) == 7:
+      self.info = f'El expediente que el alumno ha solicitado al Centro no existe'
+      return
 
     if int(self.state) == 2 and self.situation == '2':
       unlocked_info = ''
@@ -483,8 +488,11 @@ class Validation(models.Model):
       all_finished = all(val.state == '6' for val in record.validation_subjects_ids)
       all_closed = all(val.state == '7' for val in record.validation_subjects_ids) or (all_finished and record.state == '15')
 
-      if record.situation == '6':
+      if record.situation == '6': # se está a la espera de que secretaria genere el expediente
         continue
+
+      if record.situation == '7' and not any_noprocess: # el expediente solicitado no existe y no hay ninguna en no procesada
+        record.situation = '0'
 
       # si está ya notificado al estudiante o estaba en subsanación o finalizada o instancia superior
       if record.situation == '2':

@@ -40,3 +40,25 @@ class AcademicRecord(models.Model):
     vals['generator_date_id'] = today
 
     return super(AcademicRecord, self).write(vals)
+  
+  @api.onchange('state')
+  def _change_situation_validation(self):
+    self.ensure_one()
+
+    situation = '0'
+    
+    if self.state== '2':
+      situation = '0'
+
+    if self.state== '0':
+      situation = '6'
+
+    if self.state== '1':
+      situation = '7'
+
+    self.validation_id.write({
+      'situation': situation
+    })
+
+    print("sss")
+    return
