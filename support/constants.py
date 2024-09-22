@@ -15,7 +15,7 @@ PDF_VALIDATION_FIELDS_MANDATORY = [
       ('A_Nombre', 'Nombre'),
       ('A_NIA', 'NIA' , 'Número de Identificacion del Alumno/a'),
       ('A_DNI', 'DNI', 'Documento Nacional de Identidad o Número de Identidad de Extranjero/a'),
-      (('B_Requisito1', 'B_Requisito2', 'B_Requisito3', 'B_Requisito4'), 'Requisitos reunidos'),
+      (('B_Requisito1', 'B_Requisito2', 'B_Requisito3', 'B_Requisito4'), 'Estudios aportados'),
       (('C_Docu1', 'C_Docu2', 'C_Docu3', 'C_Docu4', 'C_Docu5', 'C_Docu6'), 'Documentación aportada'),
       (('C_Modulo1', 'C_Modulo2', 'C_Modulo3', 'C_Modulo4', 
         'C_Modulo5', 'C_Modulo6', 'C_Modulo7', 'C_Modulo8', 
@@ -29,7 +29,7 @@ PDF_VALIDATION_FIELDS_MANDATORY = [
 
 # campos del anexo pdf de convalidaciones que deben ir juntos
 # no puede haber valor en el primer item si lo hay en el segundo
-PDF_VALIDATION_FIELDS_PAIRED = [ 
+PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED = [ 
       ('C_Modulo1', 'C_Modulo1AACO'),
       ('C_Modulo2', 'C_Modulo2AACO'),
       ('C_Modulo3', 'C_Modulo3AACO'),
@@ -46,12 +46,15 @@ PDF_VALIDATION_FIELDS_PAIRED = [
       ('C_Modulo14', 'C_Modulo14AACO'),
       ('C_Modulo15', 'C_Modulo15AACO'),
       ('C_Modulo16', 'C_Modulo16AACO'),
+   ]
+
+PDF_VALIDATION_FIELDS_PAIRED = [ 
       ('C_Docu5', 'C_OtrosDocumentos'),
-      ('C_OtrosDocumentos', 'C_Docu5'),
+      # ('C_OtrosDocumentos', 'C_Docu5'),
       ('C_Docu6', 'C_EstudiosCEED'),
-      ('C_EstudiosCEED', 'C_Docu6'),
+      # ('C_EstudiosCEED', 'C_Docu6'),
       ('B_Requisito4', 'B_OtrosEstudios'),
-      ('B_OtrosEstudios', 'B_Requisito4'),
+      # ('B_OtrosEstudios', 'B_Requisito4')
    ]
 
 PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY = [ 

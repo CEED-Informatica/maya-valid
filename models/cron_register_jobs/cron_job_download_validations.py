@@ -349,8 +349,8 @@ class CronJobDownloadValidations(models.TransientModel):
 
       # integridad en la selección de campos
       paired_fields = []
-      for paired_field in constants.PDF_VALIDATION_FIELDS_PAIRED:
-        assert isinstance(paired_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_PAIRED. Cada entrada tiene que ser una tupla'
+      for paired_field in constants.PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED:
+        assert isinstance(paired_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED. Cada entrada tiene que ser una tupla'
 
         if  ((fields[paired_field[0]][constants.PDF_FIELD_TYPE] != 'Button' and \
             fields[paired_field[0]][constants.PDF_FIELD_VALUE] is not None and \
@@ -368,6 +368,30 @@ class CronJobDownloadValidations(models.TransientModel):
         _logger.error("No se han definido correctamente si se solicita AA o CO. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
         # TODO, descomentar. Se comenta para facilitar las pruebas
         submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ANP'))
+        submission.set_extension_due_date(to = new_timestamp)
+        continue
+
+      # integridad en la selección de campos
+      paired_fields = []
+      for paired_field in constants.PDF_VALIDATION_FIELDS_PAIRED:
+        assert isinstance(paired_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_PAIRED. Cada entrada tiene que ser una tupla'
+
+        if  ((fields[paired_field[0]][constants.PDF_FIELD_TYPE] != 'Button' and \
+            fields[paired_field[0]][constants.PDF_FIELD_VALUE] is not None and \
+            len(fields[paired_field[0]][constants.PDF_FIELD_VALUE]) != 0) or \
+            (fields[paired_field[0]][constants.PDF_FIELD_TYPE] == 'Button' and \
+            fields[paired_field[0]][constants.PDF_FIELD_VALUE] == 'Yes')) and \
+            ((fields[paired_field[1]][constants.PDF_FIELD_TYPE] != 'Button' and \
+            fields[paired_field[1]][constants.PDF_FIELD_VALUE] is None or \
+            len(fields[paired_field[1]][constants.PDF_FIELD_VALUE]) == 0) or \
+            (fields[paired_field[1]][constants.PDF_FIELD_TYPE] == 'Button' and \
+             fields[paired_field[0]][constants.PDF_FIELD_VALUE] == 'Off')):
+              paired_fields.append(fields[paired_field[0]][constants.PDF_FIELD_VALUE])
+
+      if len(paired_fields) > 0:
+        _logger.error("No se han indicado los valores de que otros estudios o que documentación o de que ciclos formativos se estudiaron en el Centro. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
+        # TODO, descomentar. Se comenta para facilitar las pruebas
+        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ANE'))
         submission.set_extension_due_date(to = new_timestamp)
         continue
 

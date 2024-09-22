@@ -112,6 +112,7 @@ class Validation(models.Model):
     ('NNX', 'No se encuentra un fichero llamado anexo o hay más de uno.'),
     ('ANC', 'Anexo no cumplimentado correctamente. Campos obligatorios no rellenados.'),
     ('ANP', 'Anexo no cumplimentado correctamente. Tipo (convalidación/aprobado con anterioridad) no indicado.'),
+    ('ANE', 'Anexo no cumplimentado correctamente. No se ha indicado qué estudios reglados y/u otra documentación y/o ciclos formativos se estudiaron en el Centro.'),
     ('SNF', 'Documento no firmado electrónicamente'),
     ('VIN', 'El trámite solicitado se gestiona a través de otra vía.'),
     ('INT', 'Ver convalidaciones módulos'), # subsanaciones específicas de módulos
