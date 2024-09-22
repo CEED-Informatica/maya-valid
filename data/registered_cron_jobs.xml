@@ -33,5 +33,16 @@
       <field name="nextcall_day">school_year.date_init</field>
       <field name="nextcall_hour">22:45:00</field>
     </record>
+
+    <record model="maya_core.cron_register" id="maya_valid.cron_download_validations_claims">
+      <field name="name">Descarga reclamaciones convalidaciones</field>
+      <field name="key">DVAC</field>
+      <field name="context">FPC</field>
+      <field name="model">cron_job_download_validations_claims</field>
+      <field name="code">cron_download_validations_claims</field>
+      <field name="numbercall">1</field>
+      <field name="nextcall_day">school_year.date_init</field>
+      <field name="nextcall_hour">00:15:00</field>
+    </record>
   </data>
 </odoo>
