@@ -131,11 +131,13 @@ class Validation(models.Model):
         compute='_compute_documentation_filename'
     )
   
-  info = fields.Text(string = "Observaciones", compute = '_compute_info')
+  info = fields.Text(string = "Información", compute = '_compute_info')
 
   sign_data = fields.Text(string = "Firma electrónica datos")
   sign_info = fields.Text(string = "Firma electrónica", compute = '_compute_sign_info')
   sign_state = fields.Boolean(compute = '_compute_sign_info')
+
+  remarks = fields.Text(string = 'Observaciones subsanación', default = '', help = 'Observaciones que se muestran en el mensaje de subsanación. Sólo adminte un párrafo') # observaciones subsanación
 
   def _default_locked(self):
     if (self.state == '2' and self.situation == '2') or self.situation == '5' or self.situation == '6': 
@@ -204,7 +206,7 @@ class Validation(models.Model):
           <p><strong>ATENCIÓN:</strong> La notificación previa fue enviada de manera errónea debido a un error administrativo. Esta notificación sustituye a la anterior. Disculpe las molestias</p>"""
 
     if reason == 'ERR1':
-      body = prebody + '<p>Su convalidación se encuentra en estado: <strong>EN PROCESO</strong></p>.'
+      body = prebody + '<p>Su convalidación se encuentra en estado: <strong>EN TRÁMITE</strong></p>.'
 
       self.write({ 
         'correction_reason': False,
@@ -234,8 +236,14 @@ class Validation(models.Model):
           <p>No es posible realizar la convalidación solicitada por los siguientes motivos:</p>
           <p style="padding-left: 1rem">(01) {0}</p>
           """.format(dict(self._fields['correction_reason'].selection).get(reason))
+      
+    remarks = ''
+    if len(self.remarks) > 0:
+        remarks = """
+           <p><strong>Observaciones del convalidador</strong><p>
+           <p>{0}</p>""".format(self.remarks)
 
-    feedback = body + comment + footer
+    feedback = body + comment + remarks + footer
 
     return feedback
 
