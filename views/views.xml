@@ -59,11 +59,14 @@
             </group>
           </group>
           <group col='4'>            
-            <group>      
-              <button name="download_validation_action" icon="fa-download" 
-                string="Descarga documentación" class="oe_highlight"
-                type="object"/>
-            </group>
+              <group>
+                <button name="download_validation_action" icon="fa-download" 
+                  string=" Documentación" class="oe_highlight"
+                  type="object"/>
+                <button name="download_validation_claim_action" icon="fa-download" 
+                  string=" Reclamación" class="oe_highlight"
+                  type="object"  attrs="{'invisible': [('state','!=', '16')] }"/>
+              </group> 
              <group> 
               <field name="sign_info" decoration-success="sign_state == True" decoration-danger="sign_state == False"/>
               <field name="sign_state" attrs="{'invisible': 1 }"/>

@@ -481,6 +481,66 @@ class Validation(models.Model):
       'url': 'web/content?model=maya_valid.validation&id=%s&field=documentation&filename=%s.zip&download=true' % 
         (self.id, filename_nor.replace(' ','%20'))
     }
+  
+  def download_validation_claim_action(self):
+    """
+    Descarga la reclamación de la documentación
+    """
+    self.ensure_one() # esta función sólo puede ser llamada por un único registro, no por un recordset
+
+    # el acceso a ir.config_parameter sólo es posible desde el administrador. 
+    # para que un usuario no admin (por ejemplo un convalidador) pueda acceder a descargar la documuentación
+    # se utiliza la función sudo() para saltar los reglas de acceso
+    validations_path = self.env['ir.config_parameter'].sudo().get_param('maya_valid.validations_path') or None
+    if validations_path == None:
+      _logger.error('La ruta de almacenamiento de convalidaciones no está definida')
+      return
+
+    current_sy = (self.env['maya_core.school_year'].search([('state', '=', 1)])) # curso escolar actual  
+
+    if len(current_sy) == 0:
+      raise MayaException(
+          _logger, 
+          'No se ha definido un curso actual',
+          50, # critical
+          comments = '''Es posible que no se haya marcado como actual ningún curso escolar''')
+    else:
+      current_school_year = current_sy[0]
+
+    path = os.path.join(validations_path, 
+          '%s_%s' % (current_school_year.date_init.year, current_school_year.date_init.year + 1), 
+          self.course_abbr) 
+
+    foldername = '[{}] {}, {}'.format(
+        self.student_id.moodle_id,
+        self.student_surname.upper() if self.student_surname is not None else 'SIN-APELLIDOS', 
+        self.student_name.upper() if self.student_name is not None else 'SIN-NOMBRE')
+      
+    filename = 'RECLAMACION [{}] {}, {}'.format(
+        self.student_id.moodle_id,
+        self.student_surname.upper() if self.student_surname is not None else 'SIN-APELLIDOS', 
+        self.student_name.upper() if self.student_name is not None else 'SIN-NOMBRE')
+    
+    foldername_nor = normalize('NFKD',foldername.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+    filename_nor = normalize('NFKD',filename.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+
+    documentation_filename = f'{path}/{foldername_nor}/{filename_nor}.zip'
+
+    try:
+      with open(documentation_filename, 'rb') as f:
+        file_bytes = f.read()
+        encode_data = base64.b64encode(file_bytes)
+    except Exception as e:
+      _logger.error('Error descargando el fichero:' + str(e))
+      return {}
+  
+    self.documentation = encode_data
+
+    return {
+      'type': 'ir.actions.act_url',
+      'url': 'web/content?model=maya_valid.validation&id=%s&field=documentation&filename=%s.zip&download=true' % 
+        (self.id, filename_nor.replace(' ','%20'))
+    }
 
   @api.depends('validation_subjects_ids')
   def _compute_state(self):
