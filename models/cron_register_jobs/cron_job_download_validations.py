@@ -396,33 +396,33 @@ class CronJobDownloadValidations(models.TransientModel):
         continue
 
       # Comprobación de firma digital
-      # buffer = BytesIO()
-      # pycurl_connex = pycurl.Curl()
-      # pycurl_connex.setopt(pycurl_connex.URL, 'http://pdf-signature-validator:80/verify_signature')
-      # pycurl_connex.setopt(pycurl_connex.POST, 1)
-      # pycurl_connex.setopt(pycurl_connex.HTTPPOST, 
-      #                      [("file", (pycurl_connex.FORM_FILE, 
-      #                                 os.path.join(path_user_submission, annex_file[0])))])
-      # pycurl_connex.setopt(pycurl_connex.WRITEDATA, buffer)
+      buffer = BytesIO()
+      pycurl_connex = pycurl.Curl()
+      pycurl_connex.setopt(pycurl_connex.URL, 'http://pdf-signature-validator:80/verify_signature')
+      pycurl_connex.setopt(pycurl_connex.POST, 1)
+      pycurl_connex.setopt(pycurl_connex.HTTPPOST, 
+                           [("file", (pycurl_connex.FORM_FILE, 
+                                      os.path.join(path_user_submission, annex_file[0])))])
+      pycurl_connex.setopt(pycurl_connex.WRITEDATA, buffer)
       
-      # pycurl_connex.perform()
-      # pycurl_connex.close()
+      pycurl_connex.perform()
+      pycurl_connex.close()
 
-      # response_curl = buffer.getvalue().decode('utf-8')
-      # response_curl_data = json.loads(response_curl)
+      response_curl = buffer.getvalue().decode('utf-8')
+      response_curl_data = json.loads(response_curl)
 
-      # validation.sign_data = response_curl
-      # if 'error' in response_curl_data:
-      #   if response_curl_data['error'] == 'PDFSIG_ERROR' or \
-      #      response_curl_data['error'] == 'NOT_SIGNED' or \
-      #      response_curl_data['error'] == 'EXPIRED_CERTIFICATE' or \
-      #      response_curl_data['error'] == 'REVOKED_CERTIFICATE' or \
-      #      response_curl_data['error'] == 'NOT_VALID_CERTIFICATE':
-      #      # response_curl_data['error'] == 'INVALID_SIGNATURE'
-      #       _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}. Error: {response_curl_data["error_message"]} ')
-      #       submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
-      #       submission.set_extension_due_date(to = new_timestamp)
-      #       continue
+      validation.sign_data = response_curl
+      if 'error' in response_curl_data:
+        if response_curl_data['error'] == 'PDFSIG_ERROR' or \
+           response_curl_data['error'] == 'NOT_SIGNED' or \
+           response_curl_data['error'] == 'EXPIRED_CERTIFICATE' or \
+           response_curl_data['error'] == 'REVOKED_CERTIFICATE' or \
+           response_curl_data['error'] == 'NOT_VALID_CERTIFICATE':
+           # response_curl_data['error'] == 'INVALID_SIGNATURE'
+            _logger.error(f'El documento no está firmado electrónicamente. Estudiante moodle id: {submission.userid}. Error: {response_curl_data["error_message"]} ')
+            submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('SNF'))
+            submission.set_extension_due_date(to = new_timestamp)
+            continue
     
 
       # obtengo el NIA del formulario
