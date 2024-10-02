@@ -306,12 +306,19 @@ class CronJobDownloadValidations(models.TransientModel):
       _logger.info(fields)
 
       missing_fields = []
+      possible_scanned = False
       for mandatory_field in mandatory_fields:
         assert isinstance(mandatory_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_MANDATORY o constants.PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY. Cada entrada tiene que ser una tupla'
         assert isinstance(mandatory_field[0], (str, tuple)), f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_MANDATORY o constants.PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY. La primera entrada de cada tupla o es una str o una tuple'
         
         if isinstance(mandatory_field[0], str):
           assert mandatory_field[0] in fields, f'La clave {mandatory_field[0]} no existe en el pdf'
+
+          if not isinstance(fields[mandatory_field[0]][constants.PDF_FIELD_VALUE],str):
+            _logger.error('Al menos un dato del formulario no de tipo str. Posiblemente anexo escaneado. Estudiante moodle id: {}'.format(submission.userid))
+            possible_scanned = True
+            missing_fields.append('Todos')
+            break
 
           # un campo obligatorio no está definido
           if fields[mandatory_field[0]][constants.PDF_FIELD_VALUE] is None or \
@@ -331,11 +338,11 @@ class CronJobDownloadValidations(models.TransientModel):
           if not exist:
             missing_fields.append(mandatory_field[1])
 
-      if len(missing_fields) > 0:
+      if len(missing_fields) > 0 or possible_scanned:
         _logger.error('Faltan campos obligatorios por definir en el pdf. Estudiante moodle id: {} {}'.format(submission.userid, missing_fields))
 
         appendix = ''
-        if len(missing_fields) > 5:
+        if len(missing_fields) > 5 or possible_scanned:
           appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado \
             en el aula virtual, que no envía una versión escaneada/fotografiada o \
             que el anexo se encuentra en un documento separado.</p>'
