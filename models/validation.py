@@ -193,6 +193,8 @@ class Validation(models.Model):
     
     footer = """
       <br>\
+      <p><strong>Se recomienda la visualización del <a href="https://gvaedu.sharepoint.com/:v:/s/Documentar-46025799-CENTREPBLICDEDUCACIADISTNCIACEED-Departament-InformticaiComunicacions/Eek43EDYl_dCug3-d7iuO6IBPKmtC6Kx17JashINScIsiA?e=fOINLH">vídeo sobre convalidaciones</a> para poder realizar el proceso de forma correcta.</strong></p>
+      <br>\
       <p>Se abre un periodo de subsanación de 15 días naturales a contar desde el día de publicación de este mensaje para reenviar \
         a través de esta misma tarea la documentación necesaria para corregir los errores. \
           Si pasado este periodo no se subsana el error, la(s) convalidación(es) afectadas se considerarán rechazadas.</p>
