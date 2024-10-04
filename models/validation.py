@@ -118,6 +118,7 @@ class Validation(models.Model):
     ('INT', 'Ver convalidaciones módulos'), # subsanaciones específicas de módulos
     ('ERR1', 'Error al notificar una subsanación que no era'), 
     ('ERR2', 'Error al notificar los detalles de una subsanación'), 
+    ('ANL', 'No es posible abrir el anexo.'),
     ], string ='Razón de la subsanación', 
     help = 'Permite indicar el motivo por el que se solicita la subsanación')
   

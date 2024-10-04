@@ -302,7 +302,21 @@ class CronJobDownloadValidations(models.TransientModel):
         continue
   
       # datos obligatorios rellenados  
-      fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]), chk_fields)
+      try:
+        fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]), chk_fields)
+      except Exception as e:
+        _logger.error('El pdf no puede ser leido. Estudiante moodle id: {}'.format(submission.userid))
+
+        appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado \
+            en el aula virtual, que no envía una versión escaneada/fotografiada, \
+            que el formato del anexo es pdf (no zip o similar) o \
+            que el anexo se encuentra en un documento separado.</p>'
+        
+        submission.save_grade(3, new_attempt = True, 
+                                 feedback = validation.create_correction('ANL', appendix))
+        submission.set_extension_due_date(to = new_timestamp)
+        continue
+
       _logger.info(fields)
 
       missing_fields = []
