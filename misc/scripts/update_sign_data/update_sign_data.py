@@ -65,7 +65,7 @@ try:
    
     validation = models.execute_kw(db, uid, password, 'maya_valid.validation', 'search_read', [[('student_id','=',user[0]["id"])]] )
     print(f'\033[0;32m[INFO]\033[0m   Convalidacion ({validation[0]}) ')
-    sign_data = '{"success": true, "CN": "' + user[0]["surname"] + ', ' + user[0]["name"] + ' (AUTENTICACI\u00d3N)"}'
+    sign_data = '{"success": true, "CN": "' + user[0]["surname"] + ', ' + user[0]["name"] + ' (MAYA AUTENTICACI\u00d3N)"}'
     # print(sign_data)
     
     models.execute_kw(db, uid, password, 'maya_valid.validation', 'write', [[validation[0]['id']], {"sign_data": sign_data}])
