@@ -93,6 +93,7 @@ class Validation(models.Model):
       ('14', 'Cerrada parcialmente'), # solo se indica el estado, no se hace nada con él
       ('15', 'Cerrada'),
       ('16', 'Reclamación'),
+      ('17', 'Revisada tras reclamación'),
       ], string ='Estado', help = 'Estado de la convalidación', 
       default = '0', compute = '_compute_state', store = True)
   
@@ -242,7 +243,7 @@ class Validation(models.Model):
           """.format(dict(self._fields['correction_reason'].selection).get(reason))
       
     remarks = ''
-    if len(self.remarks) > 0:
+    if self.remarks and len(self.remarks) > 0:
         remarks = """
            <p><strong>Observaciones del convalidador</strong><p>
            <p>{0}</p>""".format(self.remarks)
@@ -556,6 +557,8 @@ class Validation(models.Model):
       all_resolved = all(val.state == '3' for val in record.validation_subjects_ids)
       all_reviewed = all(val.state == '4' for val in record.validation_subjects_ids)
       any_reviewed = any(val.state == '4' for val in record.validation_subjects_ids)
+      all_reviewed_claim = all(val.state == '9' for val in record.validation_subjects_ids)
+      any_reviewed_claim = any(val.state == '9' for val in record.validation_subjects_ids)
       any_finished = any(val.state == '6' for val in record.validation_subjects_ids)
       all_finished = all(val.state == '6' for val in record.validation_subjects_ids)
       all_closed = all(val.state == '7' for val in record.validation_subjects_ids) or (all_finished and record.state == '15')
@@ -642,6 +645,11 @@ class Validation(models.Model):
       # si todas finalizadas -> finalizada
       if all_finished:
         record.state = '13'
+        continue
+
+      # si todas han sido revisada tras la reclamación
+      if all_reviewed_claim:
+        record.state = '17'
         continue
 
       # si hay instancias superiores y subsanaciones -> subsanación/instancia superior

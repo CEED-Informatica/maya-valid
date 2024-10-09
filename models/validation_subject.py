@@ -20,7 +20,8 @@ VALIDATION_SUBJECTS_STATES = [
           ('7', 'Cerrada'), # no seleccionable (salvo por el root). Se asigna automáticamente cuando todas las 
                                  # convalidaciones han sido finalizadas y el mensaje se ha enviado al alumno.
                                  # La convalidación queda bloqueada (salvo para el root)
-          ('8', 'Revisada tras reclamación')]
+          ('8', 'Reclamada'),
+          ('9', 'Revisada tras reclamación')]
 
     # no hay estado de devolución desde jefatura (coordinación) a los convalidadores.  Directamente resuelve jefatura o 
     # se puede poner sin procesar ya que coordinación tiene acceso los estados previos. 

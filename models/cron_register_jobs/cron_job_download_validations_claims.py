@@ -188,5 +188,12 @@ class CronJobDownloadValidationsClaims(models.TransientModel):
       validation.write({ 
         'state': '16',
       })
+
+      # todas las convalidaciones de modulos pasan a estado reclamada
+      for val in validation.validation_subjects_ids:
+        val.write({ 
+          'state': '8',
+        })
+
         
     return
