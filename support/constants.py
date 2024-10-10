@@ -23,8 +23,8 @@ PDF_VALIDATION_FIELDS_MANDATORY = [
         'C_Modulo13', 'C_Modulo14', 'C_Modulo15', 'C_Modulo16'), 
       'Módulo/s a convalidar o solicitar su aprobado con anterioridad'),
       ('E_Dia', 'Día de la firma'),
-      ('E_Mes', 'Mes de la firma'),
-      ('E_Anyo', 'Año de la firma'),
+      #('E_Mes', 'Mes de la firma'),
+      #('E_Anyo', 'Año de la firma'),
       ('E_Ciudad', 'Ciudad de la firma')]
 
 # campos del anexo pdf de convalidaciones que deben ir juntos
