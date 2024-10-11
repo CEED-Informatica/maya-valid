@@ -303,7 +303,7 @@ class CronJobDownloadValidations(models.TransientModel):
   
       # datos obligatorios rellenados  
       try:
-        fields = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]), chk_fields)
+        fields, fields_w = get_data_from_pdf(os.path.join(path_user_submission, annex_file[0]), chk_fields)
       except Exception as e:
         _logger.error('El pdf no puede ser leido. Estudiante moodle id: {}'.format(submission.userid))
 
@@ -329,15 +329,15 @@ class CronJobDownloadValidations(models.TransientModel):
           assert mandatory_field[0] in fields, f'La clave {mandatory_field[0]} no existe en el pdf'
 
           if not isinstance(fields[mandatory_field[0]][constants.PDF_FIELD_VALUE],str):
-            _logger.error('Al menos un dato del formulario no de tipo str. Posiblemente anexo escaneado. Estudiante moodle id: {}'.format(submission.userid))
+            _logger.error('Al menos un dato del formulario no es de tipo str. Posiblemente anexo escaneado. Estudiante moodle id: {}'.format(submission.userid))
             possible_scanned = True
-            missing_fields.append('Todos')
+            missing_fields.append('Todos', None)
             break
 
           # un campo obligatorio no está definido
           if fields[mandatory_field[0]][constants.PDF_FIELD_VALUE] is None or \
              len(fields[mandatory_field[0]][constants.PDF_FIELD_VALUE]) == 0:
-              missing_fields.append(mandatory_field[1])
+              missing_fields.append((mandatory_field[1], mandatory_field[0]))
 
         elif isinstance(mandatory_field[0], tuple):
           exist = False
@@ -350,20 +350,45 @@ class CronJobDownloadValidations(models.TransientModel):
               break
 
           if not exist:
-            missing_fields.append(mandatory_field[1])
+            missing_fields.append((mandatory_field[1], mandatory_field[0]))
+
+      # segunda oportunidad solo con fields
+      if len(missing_fields) > 0:
+        to_remove = [] # almacena los indices a eliminar
+        for idx, mf in enumerate(missing_fields):
+          if isinstance(mf[1], tuple):
+            exist = False
+            for option in mf[1]:
+              if option not in fields_w:
+                continue
+              
+              if (fields_w[option][constants.PDF_FIELD_TYPE] != 'Button' and \
+                fields_w[option][constants.PDF_FIELD_VALUE] is not None and \
+                len(fields_w[option][constants.PDF_FIELD_VALUE]) != 0) or \
+                (fields_w[option][constants.PDF_FIELD_TYPE] == 'Button' and fields_w[option][constants.PDF_FIELD_VALUE] == 'Yes'):
+                  fields[option] = fields_w[option]
+                  exist = True
+
+            if exist:
+              to_remove.append(idx)
+
+        for rm in sorted(to_remove, reverse = True):
+          del missing_fields[rm]
 
       if len(missing_fields) > 0 or possible_scanned:
-        _logger.error('Faltan campos obligatorios por definir en el pdf. Estudiante moodle id: {} {}'.format(submission.userid, missing_fields))
+
+        missing_fields_no_id = [tupla[0] for tupla in missing_fields]
+        _logger.error('Faltan campos obligatorios por definir en el pdf. Estudiante moodle id: {} {}'.format(submission.userid, missing_fields_no_id))
 
         appendix = ''
-        if len(missing_fields) > 5 or possible_scanned:
+        if len(missing_fields_no_id) > 5 or possible_scanned:
           appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado \
             en el aula virtual, que no envía una versión escaneada/fotografiada o \
             que el anexo se encuentra en un documento separado.</p>'
         
         submission.save_grade(3, new_attempt = True, 
                                  feedback = validation.create_correction('ANC', 
-                                                                         create_HTML_list_from_list(missing_fields, 'Campos a revisar:') + 
+                                                                         create_HTML_list_from_list(missing_fields_no_id, 'Campos a revisar:') + 
                                                                          appendix))
         submission.set_extension_due_date(to = new_timestamp)
         continue
