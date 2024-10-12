@@ -69,6 +69,7 @@ class Validation(models.Model):
       ('5', 'Notificación rectificada (pendiente envio)'),
       ('6', 'Pendiente expediente CEED'),
       ('7', 'Expediente no localizado'),
+      ('8', 'Expediente CEED generado'),
       ], string = 'Situación', default = '0',
       readonly = True)
 
@@ -567,6 +568,10 @@ class Validation(models.Model):
         continue
 
       if record.situation == '7' and not any_noprocess: # el expediente solicitado no existe y no hay ninguna en no procesada
+        record.situation = '0'
+
+      # En cuanto alguna esté procesada (resuelta o subsanacion) ya se reinicia la situación
+      if record.situation == '8' and any_resolved or any_correction:  
         record.situation = '0'
 
       # si está ya notificado al estudiante o estaba en subsanación o finalizada o instancia superior

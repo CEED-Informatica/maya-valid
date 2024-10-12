@@ -20,7 +20,7 @@ class AcademicRecord(models.Model):
   state = fields.Selection([
       ('0', 'Pendiente'),
       ('1', 'No existe'),
-      ('2', 'Finalizado')], required = True)
+      ('2', 'Finalizado')], string = 'Estado', required = True)
   
   info = fields.Text(string = 'Ciclo/curso', required = True)
   comments = fields.Text(string = 'Comentarios')
@@ -48,7 +48,7 @@ class AcademicRecord(models.Model):
     situation = '0'
     
     if self.state== '2':
-      situation = '0'
+      situation = '8'
 
     if self.state== '0':
       situation = '6'
@@ -56,9 +56,8 @@ class AcademicRecord(models.Model):
     if self.state== '1':
       situation = '7'
 
-    self.validation_id.write({
+    self.validation_id.sudo().write({
       'situation': situation
     })
 
-    print("sss")
     return
