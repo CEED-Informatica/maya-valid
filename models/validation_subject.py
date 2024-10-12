@@ -132,12 +132,12 @@ class ValidationSubject(models.Model):
       del choices[-2:]
     elif self.env.user.has_group('maya_core.group_MNGT_FP'): # coordinación de FP todas menos finalizar, por revisar y cerrar
       del choices[0]  # no se puede asignar el estado sin procesar
-      del choices[-3:]
+      del choices[-5:]
     elif self.env.user.has_group('maya_valid.group_VALID'): # convalidadores, todas menos las 4 últimas
-      del choices[-4:]
+      del choices[-6:]
     elif self.env.user.has_group('maya_core.group_ADMIN'): # Secretaria sólo las tres penúltimas
-      del choices[:-4]
-      del choices[-1]
+      del choices[:-6]
+      del choices[-3:]
     else: # cualquier otro grupo no tiene opciones
       choices.clear()
 
