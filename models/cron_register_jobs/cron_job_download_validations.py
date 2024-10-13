@@ -331,7 +331,7 @@ class CronJobDownloadValidations(models.TransientModel):
           if not isinstance(fields[mandatory_field[0]][constants.PDF_FIELD_VALUE],str):
             _logger.error('Al menos un dato del formulario no es de tipo str. Posiblemente anexo escaneado. Estudiante moodle id: {}'.format(submission.userid))
             possible_scanned = True
-            missing_fields.append('Todos', None)
+            missing_fields.append(('Todos', None))
             break
 
           # un campo obligatorio no está definido
@@ -361,7 +361,7 @@ class CronJobDownloadValidations(models.TransientModel):
             for option in mf[1]:
               if option not in fields_w:
                 continue
-              
+
               if (fields_w[option][constants.PDF_FIELD_TYPE] != 'Button' and \
                 fields_w[option][constants.PDF_FIELD_VALUE] is not None and \
                 len(fields_w[option][constants.PDF_FIELD_VALUE]) != 0) or \
@@ -383,7 +383,7 @@ class CronJobDownloadValidations(models.TransientModel):
         appendix = ''
         if len(missing_fields_no_id) > 5 or possible_scanned:
           appendix = '<p><strong>Sugerencia</strong>. Compruebe que ha utilizado el anexo proporcionado \
-            en el aula virtual, que no envía una versión escaneada/fotografiada o \
+            en el aula virtual, que no envía una versión escaneada/fotografiada, que no ha imprimido el anexo una vez rellenado (hay que grabarlo, no imprimirlo) o \
             que el anexo se encuentra en un documento separado.</p>'
         
         submission.save_grade(3, new_attempt = True, 
