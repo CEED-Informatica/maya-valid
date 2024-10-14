@@ -280,6 +280,20 @@ class CronJobDownloadValidations(models.TransientModel):
         file_nor = normalize('NFKD',file.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
         os.rename(os.path.join(path_user_submission, file), os.path.join(path_user_submission, file_nor.upper()))
 
+      #####
+      # Por si mandan una carpeta donde estan dentro los ficheros
+      # reasigna un nuevo directorio de trabajo
+      if len(os.listdir(path_user_submission)) == 1:
+        if os.path.isdir(os.path.join(path_user_submission, os.listdir(path_user_submission)[0])):
+            path_user_submission = os.path.join(path_user_submission, os.listdir(path_user_submission)[0])
+
+            for file in os.listdir(path_user_submission):
+              file_nor = normalize('NFKD',file.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
+              os.rename(os.path.join(path_user_submission, file), os.path.join(path_user_submission, file_nor.upper()))
+      ########
+      ########
+      
+
       for file in os.listdir(path_user_submission):
         if os.path.isfile(os.path.join(path_user_submission, file)):
             files_unzip.append(file)
