@@ -9,8 +9,8 @@
 # La estructura de la plantilla es:
 # clave, xmin, ymin, tipo (ver funcion inttype2string), valor por defecto 
 PDF_NOFIELDS_FITZ_VALIDATION = [ 
-     ('A_Apellidos', 159.25, 113,47, 7, ''),
-     ('A_Nombre', 408.6, 96,3, 7, ''),
+     ('A_Apellidos', 159.25, 113.47, 7, ''),
+     ('A_Nombre', 408.6, 96.3, 7, ''),
      ('A_NIA', 304, 98.27, 7, ''),
      ('A_DNI', 201.80, 98.27, 7, ''),
      ('A_Direccion', 159.9, 130.57, 7, ''),
