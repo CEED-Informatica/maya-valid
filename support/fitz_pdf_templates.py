@@ -45,7 +45,7 @@ PDF_NOFIELDS_FITZ_VALIDATION = [
      ('C_Modulo6', 171.35, 505.2, 3, ''),
      ('C_Modulo6AACO', 271.75, 505.2, 3, ''),
      ('C_Modulo7', 306.15, 505.2, 3, ''),
-     ('C_Modulo7AACO', 403, 505.2, 3, ''),
+     ('C_Modulo7AACO', 403.5, 505.2, 3, ''),
      ('C_Modulo8', 440.95, 505.2, 3, ''),
      ('C_Modulo8AACO', 543.34, 505.2, 3, ''),
      ('C_Modulo9', 36.54, 528.65, 3, ''),
