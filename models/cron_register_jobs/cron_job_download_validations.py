@@ -422,7 +422,20 @@ class CronJobDownloadValidations(models.TransientModel):
             len(fields[paired_field[1]][constants.PDF_FIELD_VALUE]) == 0) or \
             (fields[paired_field[1]][constants.PDF_FIELD_TYPE] == 'Button' and \
              fields[paired_field[0]][constants.PDF_FIELD_VALUE] == 'Off')):
-              paired_fields.append(fields[paired_field[0]][constants.PDF_FIELD_VALUE])
+              paired_fields.append((fields[paired_field[0]][constants.PDF_FIELD_VALUE], paired_field[1]))
+
+      # segunda oportunidad solo con fields
+      if len(paired_fields) > 0:
+        to_remove = [] # almacena los indices a eliminar
+        for idx, pf in enumerate(paired_fields):
+          if fields_w[pf[1]][constants.PDF_FIELD_VALUE] is not None and \
+             len(fields_w[pf[1]][constants.PDF_FIELD_VALUE]) != 0:
+              fields[pf[1]] = fields_w[pf[1]]
+              to_remove.append(idx)
+
+        for rm in sorted(to_remove, reverse = True):
+          del paired_fields[rm]
+
 
       if len(paired_fields) > 0:
         _logger.error("No se han definido correctamente si se solicita AA o CO. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
