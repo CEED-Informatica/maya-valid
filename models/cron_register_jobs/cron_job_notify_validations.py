@@ -125,9 +125,10 @@ class CronJobNotifyValidations(models.TransientModel):
 
       # está en estado de subsanación y el alumno no ha sido avisado
       if validation.state == '2' and validation.situation == '1':
+        submission.unlock()
         submission.save_grade(3, new_attempt = True, 
                                  feedback = validation.create_correction('INT', extra_info))
-        submission.unlock()
+        
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
@@ -136,6 +137,7 @@ class CronJobNotifyValidations(models.TransientModel):
 
       # está en estado de proceso, instancia superior o resuelto y el alumno había sido notificado de una subsanación
       if validation.state in ('1','3','5') and validation.situation == '5':
+        submission.unlock()
         submission.save_grade(2, new_attempt = False, feedback = validation.create_correction('ERR1'))
         submission.lock()
         # submission.set_extension_due_date(to = new_timestamp)
@@ -146,8 +148,8 @@ class CronJobNotifyValidations(models.TransientModel):
 
       # está en estado de subsanación o subsanacion/instancia superior y el alumno había sido notificado de una subsanación
       if validation.state in('2','4') and validation.situation == '5':
-        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ERR2'))
         submission.unlock()
+        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ERR2'))
         submission.set_extension_due_date(to = new_timestamp)
         # TODO comprobar que la nota se haya almacenado correctamente en Moodle
         validation.write({
@@ -156,6 +158,7 @@ class CronJobNotifyValidations(models.TransientModel):
 
       # está finalizada
       if validation.state == '13':
+        submission.unlock()
         submission.save_grade(4, new_attempt = False, feedback = validation.create_finished_notification_message())
         validation.write({
           'state': '15'  
