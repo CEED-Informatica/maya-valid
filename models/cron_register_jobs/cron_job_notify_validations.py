@@ -120,7 +120,7 @@ class CronJobNotifyValidations(models.TransientModel):
       # obtengo la primera entrega que tenga como estudiante al que se indica en la convalidación
       submission = next((sub for sub in submissions if sub.userid == int(validation.student_id.moodle_id)), None)
       if submission == None:
-        _logger.error(f'No es posible encontrar en la tarea de Moodle {validation_task_id} la entrega del usuario id A{submission.user_id}:M{validation.student_id}')
+        _logger.error(f'No es posible encontrar en la tarea de Moodle {validation_task_id} la entrega del usuario id Aules@{validation.student_id.moodle_id}:Maya@{validation.student_id}')
         continue
 
       # está en estado de subsanación y el alumno no ha sido avisado
