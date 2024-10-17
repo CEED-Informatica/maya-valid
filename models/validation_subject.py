@@ -67,6 +67,7 @@ class ValidationSubject(models.Model):
       ('8', '8'),
       ('9', '9'),
       ('10', '10'),
+      ('CO', 'CO')
       ], string ="Nota")
   
   comments = fields.Text(string = 'Comentarios / Razón rechazo',
@@ -135,6 +136,9 @@ class ValidationSubject(models.Model):
       del choices[-5:]
     elif self.env.user.has_group('maya_valid.group_VALID'): # convalidadores, todas menos las 4 últimas
       del choices[-6:]
+    elif self.env.user.has_group('maya_core.group_ADMIN') and int(self.state) == 17: # Secretaria en una cnovalidacion con reclamacion resuelta
+      del choices[:-6]  # TODO esot es mal!!!
+      del choices[-3:]
     elif self.env.user.has_group('maya_core.group_ADMIN'): # Secretaria sólo las tres penúltimas
       del choices[:-6]
       del choices[-3:]
