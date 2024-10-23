@@ -8,11 +8,11 @@ import sys, argparse
 print('\033[1mMaya | create-validation-manually. v1.0\033[0m')
 
 parser = argparse.ArgumentParser(
-  description = 'Asocia módulos a una convalidación para un alumno')
+  description = 'Asocia módulos a una convalidación de un alumno')
 
 # argumentos
 parser.add_argument('csv_filename', help = 'Fichero csv con los datos: código del módulo, AA/CO') 
-parser.add_argument('-nia', '--nia', required = True, help = 'NIA del alumno. Requerido')
+parser.add_argument('-mid', '--mid', required = True, help = 'Identificador de Moodle del alumno. Requerido')
 parser.add_argument('-exp', '--dossier', default = '', help = 'Solicita espediente académico')
 parser.add_argument('-t', '--type', default = 0, help = 'Tipo de convalidación. 0 (Estudios) / 1 (Competencias). Por defecto: 0')
 parser.add_argument('-u', '--url', default = 'http://localhost', help = 'URL del servidor Odoo. Por defecto: http://localhost')
@@ -27,7 +27,7 @@ url = args.url + ':' + args.port
 db = args.database
 username = args.user
 password = args.password
-nia = args.nia
+moodle_id = args.mid
 val_type = args.type
 dossier = args.dossier
 
@@ -64,7 +64,7 @@ try:
   models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 
   # Localizando al usuario
-  maya_user = models.execute_kw(db, uid, password, 'maya_core.student', 'search_read', [[['nia','=', nia]]], { 'fields': ['id', 'name', 'surname']})
+  maya_user = models.execute_kw(db, uid, password, 'maya_core.student', 'search_read', [[['moodle_id','=', moodle_id]]], { 'fields': ['id', 'name', 'surname']})
   print(f'\033[0;32m[INFO]\033[0m Estudiante:', maya_user[0]['name'], maya_user[0]['surname'])
   
   # Localizando la convalidacion
