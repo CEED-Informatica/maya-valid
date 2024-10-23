@@ -617,11 +617,16 @@ class Validation(models.Model):
           record.state = '5' # Resuelta
           continue
       
-      if record.situation == '3':
+        """  if record.situation == '3':
         record.state = '2'
-        continue
+        continue """
 
-      record.situation = '0'
+      if record.situation == '3' and not any_correction:
+        record.situation = '0'    
+      elif record.situation == '3':
+        record.state = '2'
+      else:
+        record.situation = '0'
 
       # si todas sin procesar -> sin procesar
       if all_noprocess:
@@ -658,9 +663,12 @@ class Validation(models.Model):
         continue
 
       # si hay instancias superiores y subsanaciones -> subsanación/instancia superior
-      if any_higher_level and any_correction:
+      if any_higher_level and any_correction and record.situation != '3':
         record.state = '4'
         record.situation = '1'
+        continue
+      elif any_higher_level and any_correction:
+        record.state = '4'
         continue
 
       # si hay alguna en instancia superior y no hay ninguna pendiente -> instancia superior
@@ -669,9 +677,12 @@ class Validation(models.Model):
         continue
       
       # si hay al menos una subsanación y no hay ninguna pendiente -> subsanacion
-      if any_correction and not any_noprocess:
+      if any_correction and not any_noprocess and record.situation != '3':
         record.state = '2'
         record.situation = '1'
+        continue
+      elif any_correction and not any_noprocess:
+        record.state = '2'    
         continue
 
       # si hay alguna sin procesar y otras ya resueltas o pendientes de subsanación o a instancias superiores -> en proceso
