@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser(
 # argumentos
 parser.add_argument('csv_filename', help = 'Fichero csv con los datos: código del módulo, AA/CO') 
 parser.add_argument('-mid', '--mid', required = True, help = 'Identificador de Moodle del alumno. Requerido')
+parser.add_argument('-nia', '--nia', default = '', help = 'NIA del alumno.')
 parser.add_argument('-exp', '--dossier', default = '', help = 'Solicita espediente académico')
 parser.add_argument('-t', '--type', default = 0, help = 'Tipo de convalidación. 0 (Estudios) / 1 (Competencias). Por defecto: 0')
 parser.add_argument('-u', '--url', default = 'http://localhost', help = 'URL del servidor Odoo. Por defecto: http://localhost')
@@ -28,6 +29,7 @@ db = args.database
 username = args.user
 password = args.password
 moodle_id = args.mid
+nia = args.nia
 val_type = args.type
 dossier = args.dossier
 
@@ -76,6 +78,11 @@ try:
   if confirm.upper() != 'S':
     print('\033[0;31m[ERROR]\033[0m Proceso de actualización de la convalidación cancelado')
     exit()
+
+  # actualizando el nia
+  if nia:
+    models.execute_kw(db, uid, password, 'maya_core.student', 'write',  [[maya_user[0]['id']], { 'nia': nia }]) 
+    print(f'\033[0;32m[INFO]\033[0m Actualizando NIA...')
 
   # creando los módulo solicitados
   print(f'\033[0;32m[INFO]\033[0m Creando convalidaciones de módulos')
