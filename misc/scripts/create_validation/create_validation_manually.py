@@ -108,14 +108,15 @@ try:
                                            update_validation]) 
   
   # actualizando expediente
-  dossier_list = dossier.split(',')
+  if dossier:
+    dossier_list = dossier.split(',')
 
-  for dos in dossier_list:
-    dossier_id = models.execute_kw(db, uid, password, 'maya_valid.academic_record', 'create', [{
-      'validation_id': validation[0]['id'],
-      'state': '0',
-      'info': dos.strip() 
-    }])
+    for dos in dossier_list:
+      dossier_id = models.execute_kw(db, uid, password, 'maya_valid.academic_record', 'create', [{
+        'validation_id': validation[0]['id'],
+        'state': '0',
+        'info': dos.strip() 
+      }])
 
 except Exception as e:
   print('\033[0;31m[ERROR]\033[0m ' + str(e))
