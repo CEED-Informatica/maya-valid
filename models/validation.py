@@ -141,7 +141,7 @@ class Validation(models.Model):
   sign_info = fields.Text(string = "Firma electrónica", compute = '_compute_sign_info')
   sign_state = fields.Boolean(compute = '_compute_sign_info')
 
-  remarks = fields.Text(string = 'Observaciones subsanación', default = '', help = 'Observaciones que se muestran en el mensaje de subsanación. Sólo adminte un párrafo') # observaciones subsanación
+  remarks = fields.Text(string = 'Observaciones subsanación', default = '', help = 'Observaciones que se muestran en el mensaje de subsanación. Sólo admite un párrafo') # observaciones subsanación
 
   def _default_locked(self):
     if (self.state == '2' and self.situation == '2') or self.situation == '5' or self.situation == '6': 
@@ -258,9 +258,13 @@ class Validation(models.Model):
     Crea el mensaje de notificación de resolución de la convalidación
     Devuelve la notificación en formato HTML
     """
-    need_table_denied = False
-
     body = '<h6>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</h6>'
+    
+    if self.situation == '4' and len(self.validation_subjects_ids):  # fuera de plazo
+      body_cont = '<p>La convalidación no ha sido admitida a trámite por finalización del plazo de subsanación.</p>'
+      return body + body_cont
+
+    need_table_denied = False
 
     table = '<br><table class="table table-striped table-sm"><thead><tr><th>Código</th><th>Módulo</th><th>Tipo</th><th>Aceptada</th><th>Calificación</th></tr></thead><tbody>'
     
@@ -720,7 +724,6 @@ class Validation(models.Model):
         record.state = '12'
         continue
 
-
   def _compute_is_state_read_only(self):
     for record in self:
       record.is_state_read_only = False
@@ -737,3 +740,20 @@ class Validation(models.Model):
       if int(record.state) >= 13 and \
         self.env.user.has_group('maya_core.group_MNGT_FP'):
           record.is_state_read_only = True
+  
+  def validation_to_finished(self):
+    """
+    Cambia el estado de una convalidación a finalizada
+    La convalidación tiene que estar en estado de subsanación y no tener módulos añadidos, es decir, que esté en una 
+    subsanación por formato, no por falta de documentación
+    """
+    if self.env.is_admin() == False:
+      raise AccessDenied('Sólo el administrador puede cambiar el estado de la convalidación')
+    
+    self.ensure_one() # esta función sólo puede ser llamada por un único registro, no por un recordset
+
+    if int(self.state) != 2 or int(self.situation) != 4 or len(self.validation_subjects_ids) != 0:
+      raise AccessDenied('Sólo se pueden finalizar convalidaciones en estado de subsanación, fuera de plazo y sin módulos')
+
+    self.state = '13' # finalizada
+    
