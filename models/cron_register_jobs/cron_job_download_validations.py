@@ -7,6 +7,7 @@ import logging
 import pycurl,json
 from io import BytesIO
 from unicodedata import normalize
+import shutil
 
 # Moodle
 from ....maya_core.support.maya_moodleteacher.maya_moodle_connection import MayaMoodleConnection
@@ -270,6 +271,9 @@ class CronJobDownloadValidations(models.TransientModel):
       # creación del directorio para descomprimirlo
       path_user_submission = os.path.join(path_user_nor, filename_nor, '') 
       if not os.path.exists(path_user_submission):
+        os.makedirs(path_user_submission)
+      else:  # en el caso extraño de que el directorio ya este creado (se ha colgado la aplicación) se elimina y se vuelve a crear
+        shutil.rmtree(path_user_submission, ignore_errors = True)
         os.makedirs(path_user_submission)
 
       # lo descomprime. si el fichero existe, lo sobreescribe
