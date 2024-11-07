@@ -287,9 +287,14 @@ class CronJobDownloadValidations(models.TransientModel):
       #####
       # Por si mandan una carpeta donde estan dentro los ficheros
       # reasigna un nuevo directorio de trabajo
-      if len(os.listdir(path_user_submission)) == 1:
-        if os.path.isdir(os.path.join(path_user_submission, os.listdir(path_user_submission)[0])):
-            path_user_submission = os.path.join(path_user_submission, os.listdir(path_user_submission)[0])
+      # excluyo algunos directorios que vienen en ciertos SO
+      exclude_dirs = ['__MACOSX']
+      internal_dirs = os.listdir(path_user_submission)
+      clean_internal_dirs = [directory for directory in internal_dirs if directory not in exclude_dirs]
+
+      if len(clean_internal_dirs) == 1:
+        if os.path.isdir(os.path.join(path_user_submission, clean_internal_dirs[0])):
+            path_user_submission = os.path.join(path_user_submission, clean_internal_dirs[0])
 
             for file in os.listdir(path_user_submission):
               file_nor = normalize('NFKD',file.replace(' ','_')).encode('ASCII', 'ignore').decode('utf-8')
