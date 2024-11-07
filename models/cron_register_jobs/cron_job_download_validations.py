@@ -432,6 +432,8 @@ class CronJobDownloadValidations(models.TransientModel):
       if len(paired_fields) > 0:
         to_remove = [] # almacena los indices a eliminar
         for idx, pf in enumerate(paired_fields):
+          if pf[1] not in fields_w:
+            continue
           if fields_w[pf[1]][constants.PDF_FIELD_VALUE] is not None and \
              len(fields_w[pf[1]][constants.PDF_FIELD_VALUE]) != 0:
               fields[pf[1]] = fields_w[pf[1]]
@@ -440,6 +442,16 @@ class CronJobDownloadValidations(models.TransientModel):
         for rm in sorted(to_remove, reverse = True):
           del paired_fields[rm]
 
+      # tercera oportunidad. Ver si el elemento pareado acaba en CO
+      if len(paired_fields) > 0:
+        to_remove = [] # almacena los indices a eliminar
+        for idx, pf in enumerate(paired_fields):
+          if pf[0][-2:] == 'CO' or pf[0][-2:] == 'AA':
+            to_remove.append(idx)
+            fields[pf[1]] = (pf[0][-2:], fields[pf[1]][1])
+
+        for rm in sorted(to_remove, reverse = True):
+          del paired_fields[rm]
 
       if len(paired_fields) > 0:
         _logger.error("No se han definido correctamente si se solicita AA o CO. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
