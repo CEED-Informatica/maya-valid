@@ -51,7 +51,7 @@ PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED = [
 PDF_VALIDATION_FIELDS_PAIRED = [ 
       ('C_Docu5', 'C_OtrosDocumentos'),
       # ('C_OtrosDocumentos', 'C_Docu5'),
-      ('C_Docu6', 'C_EstudiosCEED'),
+      # ('C_Docu6', 'C_EstudiosCEED'),  # se elimina de manera temporal
       # ('C_EstudiosCEED', 'C_Docu6'),
       ('B_Requisito4', 'B_OtrosEstudios'),
       # ('B_OtrosEstudios', 'B_Requisito4')
