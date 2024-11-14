@@ -575,7 +575,7 @@ class Validation(models.Model):
         record.situation = '0'
 
       # En cuanto alguna esté procesada (resuelta o subsanacion) ya se reinicia la situación
-      if record.situation == '8' and any_resolved or any_correction:  
+      if record.situation == '8' and (any_resolved or any_correction): 
         record.situation = '0'
 
       # si está ya notificado al estudiante o estaba en subsanación o finalizada o instancia superior
@@ -626,9 +626,11 @@ class Validation(models.Model):
         continue """
 
       if record.situation == '3' and not any_correction:
-        record.situation = '0'    
+        record.situation = '0'
+        continue   
       elif record.situation == '3':
         record.state = '2'
+        continue
       else:
         record.situation = '0'
 

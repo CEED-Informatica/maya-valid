@@ -621,8 +621,12 @@ class CronJobDownloadValidations(models.TransientModel):
         })
       # subsanación por falta de documentación de uno de los módulos
       elif validation.correction_reason == 'INT' and new_documentation:
-        validation.situation = '3'
+        situation = validation.situation = '3'
         submission.save_grade(2)
+
+        validation.write({ 
+          'situation': situation,
+        })
       # ha pasado los filtros iniciales => cambio el estado a en proceso
       else:
         if val_type == STUDIES_VAL:
