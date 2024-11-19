@@ -175,7 +175,6 @@
          Se ejecutan registro por registro                                         -->
     <!-- ************************************************************************* -->
 
-    <!-- Regla para ver solo las convalidaciones que le corresponden al convalidador -->
     <!-- Regla para ver solo las convalidaciones resueltas o en instancia superior o en subsanación-->
     <record id="maya_valid.validation_coordfp_rol_rule" model="ir.rule">
       <field name="name">Acceso de los revisores sólo a las convalidaciones en estado de revisión</field>
@@ -184,6 +183,7 @@
       <field name="domain_force">[('state','in',['2','3','4','5','6','7','8','9','10','11','12','13','15'])]</field>
     </record>
 
+    <!-- Regla para ver solo las convalidaciones que le corresponden al convalidador -->
     <record id="maya_valid.validation_validator_rol_rule" model="ir.rule">
       <field name="name">Acceso de los validadores solo a las convalidaciones de sus ciclos</field>
       <field name="model_id" ref="model_maya_valid_validation"/>
@@ -191,11 +191,12 @@
       <field name="domain_force">[('course_abbr','in',[rol.course_id.abbr for rol in user.maya_employee_id.roles_ids if rol.course_id.abbr is not False])]</field>
     </record>
 
+    <!-- Regla para ver solo las convalidaciones revisadas, finalizadas, cerradas o revisasdas tras convalidación -->
     <record id="maya_valid.validation_administration_rol_rule" model="ir.rule">
       <field name="name">Acceso de secretaria sólo a las convalidaciones en estado de revisión</field>
       <field name="model_id" ref="model_maya_valid_validation"/>
       <field name="groups" eval="[(4, ref('maya_core.group_ADMIN'))]"/>
-      <field name="domain_force">[('state','in',['8','9','10','11','12','13','15'])]</field>
+      <field name="domain_force">[('state','in',['8','9','10','11','12','13','15','17'])]</field>
     </record>
 
   </data>
