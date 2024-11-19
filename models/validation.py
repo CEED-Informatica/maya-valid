@@ -260,7 +260,7 @@ class Validation(models.Model):
     """
     body = '<h6>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</h6>'
     
-    if self.situation == '4' and len(self.validation_subjects_ids):  # fuera de plazo
+    if self.situation == '4' and not len(self.validation_subjects_ids):  # fuera de plazo
       body_cont = '<p>La convalidación no ha sido admitida a trámite por finalización del plazo de subsanación.</p>'
       return body + body_cont
 
@@ -745,7 +745,7 @@ class Validation(models.Model):
   
   def validation_to_finished(self):
     """
-    Cambia el estado de una convalidación a finalizada
+    Cambia el estado de una convalidación a finalizada y su situación a fuera de plazo
     La convalidación tiene que estar en estado de subsanación y no tener módulos añadidos, es decir, que esté en una 
     subsanación por formato, no por falta de documentación
     """
@@ -754,8 +754,9 @@ class Validation(models.Model):
     
     self.ensure_one() # esta función sólo puede ser llamada por un único registro, no por un recordset
 
-    if int(self.state) != 2 or int(self.situation) != 4 or len(self.validation_subjects_ids) != 0:
+    if (int(self.state) != 2 and int(self.situation) != 4) or len(self.validation_subjects_ids) != 0:
       raise AccessDenied('Sólo se pueden finalizar convalidaciones en estado de subsanación, fuera de plazo y sin módulos')
 
+    self.situation = '4' #  fuera de plazo
     self.state = '13' # finalizada
     
