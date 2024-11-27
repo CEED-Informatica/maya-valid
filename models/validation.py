@@ -121,6 +121,7 @@ class Validation(models.Model):
     ('ERR1', 'Error al notificar una subsanación que no era'), 
     ('ERR2', 'Error al notificar los detalles de una subsanación'), 
     ('ANL', 'No es posible abrir el anexo.'),
+    ('MNE', 'Se han indicado módulos que no existen.'),
     ], string ='Razón de la subsanación', 
     help = 'Permite indicar el motivo por el que se solicita la subsanación')
   
@@ -318,7 +319,7 @@ class Validation(models.Model):
     feedback = body + table + table_denied
 
     return feedback
-
+  
   @api.depends('correction_date')
   def _compute_correction_date_end(self):
     for record in self:
