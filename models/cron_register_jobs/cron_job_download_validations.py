@@ -536,6 +536,7 @@ class CronJobDownloadValidations(models.TransientModel):
 
       # TODO comprobar y eliminar si es el caso, si un mismo módulo aparece más de una vez
       id_subjects = []
+      all_subjects_ok = True
       for key in fields:
 
         # es el nombre del módulo
@@ -562,12 +563,15 @@ class CronJobDownloadValidations(models.TransientModel):
           subject = self.env['maya_core.subject'].search([('code', '=', code)])
             
           if len(subject) == 0:
-            raise MayaException(
-              _logger, 
-              'No se encuentra en Maya el módulo con código {}'.format(code),
-              50, # critical
-              comments = '''Tal vez falten módulos por codificar o que el código del PDF no sea el correcto. Código: {}
-                '''. format(code))
+            all_subjects_ok = False
+            break
+
+            # raise MayaException(
+            #   _logger, 
+            #   'No se encuentra en Maya el módulo con código {}'.format(code),
+            #   50, # critical
+            #   comments = '''Tal vez falten módulos por codificar o que el código del PDF no sea el correcto. Código: {}
+            #     '''. format(code))
 
           if code not in validation_subjects_code_previous:
             valid_subject = (0, 0, {
@@ -587,6 +591,12 @@ class CronJobDownloadValidations(models.TransientModel):
           if subject.id not in id_subjects: 
             validation_subjects.append(valid_subject)
             id_subjects.append(subject.id)
+
+      if not all_subjects_ok:
+        _logger.error(f'Se han indicado módulos que no existen. Estudiante moodle id: {submission.userid}')
+        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('MNE'))
+        submission.set_extension_due_date(to = new_timestamp)
+        continue
 
       # los módulos solicitados en anteriores entregas que no han sido solcitados en esta
       # se eliminan
