@@ -87,7 +87,7 @@
                   type="object"/>
                 <button name="download_validation_claim_action" icon="fa-download" 
                   string=" Reclamación" class="oe_highlight"
-                  type="object"  attrs="{'invisible': [('state','!=', '16')] }"/>
+                  type="object" attrs="{'invisible': [('claimed','!=', True)] }"/>
               </group> 
              <group> 
               <field name="sign_info" decoration-success="sign_state == True" decoration-danger="sign_state == False"/>
@@ -152,10 +152,16 @@
                 </field>
               </group>
             </page>
-            <page string='Observaciones'>
+            <page string='Observ. subsanación' >
               <group>
-                <field name="remarks"/>
-            </group>
+                <field name="remarks" attrs="{'readonly':[('state','not in',['0','1','2','3','4'])]}"/>
+              </group>
+            </page>
+            <page string='Observ. reclamación' attrs="{'invisible': [('claimed','!=', True)] }">
+              <group>
+                <field name="claimed" attrs="{'invisible': 1 }"/>
+                <field name="remarks_claim"/>
+              </group>
             </page>
           </notebook>
         </form>

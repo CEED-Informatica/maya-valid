@@ -144,6 +144,10 @@ class Validation(models.Model):
 
   remarks = fields.Text(string = 'Observaciones subsanación', default = '', help = 'Observaciones que se muestran en el mensaje de subsanación. Sólo admite un párrafo') # observaciones subsanación
 
+  # indica si la reclanmacion ha sido reclamada
+  claimed = fields.Boolean(default = False)
+  remarks_claim = fields.Text(string = 'Observaciones reclamación', default = '', help = 'Observaciones que se muestran en el mensaje de resolución de la reclamación. Sólo admite un párrafo') # observaciones subsanación
+
   def _default_locked(self):
     if (self.state == '2' and self.situation == '2') or self.situation == '5' or self.situation == '6': 
       return True
@@ -254,17 +258,11 @@ class Validation(models.Model):
 
     return feedback
 
-  def create_finished_notification_message(self) -> str:
+  def create_table_notification(self) -> str:
     """
-    Crea el mensaje de notificación de resolución de la convalidación
-    Devuelve la notificación en formato HTML
+    Crea las tablas de la resolución, tanto las negativas como las positivas
+    Es válida para resolucion inicial com para reclamaciones
     """
-    body = '<h6>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</h6>'
-    
-    if self.situation == '4' and not len(self.validation_subjects_ids):  # fuera de plazo
-      body_cont = '<p>La convalidación no ha sido admitida a trámite por finalización del plazo de subsanación.</p>'
-      return body + body_cont
-
     need_table_denied = False
 
     table = '<br><table class="table table-striped table-sm"><thead><tr><th>Código</th><th>Módulo</th><th>Tipo</th><th>Aceptada</th><th>Calificación</th></tr></thead><tbody>'
@@ -316,7 +314,40 @@ class Validation(models.Model):
 
       table_denied += '</tbody></table>'
 
-    feedback = body + table + table_denied
+    return table + table_denied
+   
+  def create_finished_notification_message(self) -> str:
+    """
+    Crea el mensaje de notificación de resolución de la convalidación
+    Devuelve la notificación en formato HTML
+    """
+    body = '<h6>El proceso de convalidación solicitado ya ha sido finalizado con la siguiente resolución:</h6>'
+    
+    if self.situation == '4' and not len(self.validation_subjects_ids):  # fuera de plazo
+      body_cont = '<p>La convalidación no ha sido admitida a trámite por finalización del plazo de subsanación.</p>'
+      return body + body_cont
+
+    tables = self.create_table_notification()
+
+    feedback = body + tables
+
+    return feedback
+
+  
+  def create_finished_notification_claim_message(self) -> str:
+    """
+    Crea el mensaje de notificación de resolución de la reclamación de la convalidación
+    Devuelve la notificación en formato HTML
+    """
+    body = '<h6>El proceso de reclamación de la convalidación solicitado ya ha sido finalizado con la siguiente resolución:</h6>'
+
+    tables = self.create_table_notification()
+
+    remarks = '''
+           <p><strong>Comentarios:</strong><p>
+           <p>{0}</p>'''.format(self.remarks_claim)
+  
+    feedback = body + tables + remarks
 
     return feedback
   

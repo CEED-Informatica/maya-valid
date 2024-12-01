@@ -117,6 +117,10 @@ class CronJobNotifyValidations(models.TransientModel):
     
     for validation in validations:
 
+      # si ha sido reclamada las notificaciones van a por otra cronjob
+      if validation.claimed:
+        continue
+
       # obtengo la primera entrega que tenga como estudiante al que se indica en la convalidación
       submission = next((sub for sub in submissions if sub.userid == int(validation.student_id.moodle_id)), None)
       if submission == None:

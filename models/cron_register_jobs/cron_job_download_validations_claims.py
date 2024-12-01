@@ -187,6 +187,7 @@ class CronJobDownloadValidationsClaims(models.TransientModel):
       submission.lock()
       validation.write({ 
         'state': '16',
+        'claimed': True
       })
 
       # todas las convalidaciones de modulos pasan a estado reclamada
