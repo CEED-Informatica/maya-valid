@@ -141,7 +141,8 @@ class ValidationSubject(models.Model):
       del choices[-3:]
     elif self.env.user.has_group('maya_core.group_ADMIN'): # Secretaria sólo las tres penúltimas
       del choices[:-6]
-      del choices[-3:]
+      del choices[3]
+      del choices[3]
     else: # cualquier otro grupo no tiene opciones
       choices.clear()
 
@@ -295,7 +296,7 @@ class ValidationSubject(models.Model):
       if record.env.user.has_group('maya_core.group_ROOT'):
         record.is_read_only = False
     
-      if int(record.state) < 7 and self.env.user.has_group('maya_core.group_ADMIN'): 
+      if (int(record.state) < 7 or int(record.state) == 9) and self.env.user.has_group('maya_core.group_ADMIN'): 
         record.is_read_only = False
     
       if int(record.state) < 6 and self.env.user.has_group('maya_core.group_MNGT_FP'):
