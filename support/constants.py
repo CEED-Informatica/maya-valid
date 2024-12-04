@@ -67,10 +67,30 @@ PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY = [
         'C_Modulo5', 'C_Modulo6', 'C_Modulo7', 'C_Modulo8', 
         'C_Modulo9', 'C_Modulo10', 'C_Modulo11', 'C_Modulo12'), 
       'Módulo/s a convalidar'),
-      ('E_Dia', 'Día de la firma'),
-      ('E_Mes', 'Mes de la firma'),
-      ('E_Anyo', 'Año de la firma'),
-      ('E_Ciudad', 'Ciudad de la firma')]
+      # ('E_Dia', 'Día de la firma'),
+      # ('E_Mes', 'Mes de la firma'),
+      # ('E_Anyo', 'Año de la firma'),
+      # ('E_Ciudad', 'Ciudad de la firma')
+      ]
+
+PDF_COMPETENCY_VALIDATION_FIELDS_SUBJECTS_PAIRED = [ 
+      ('C_Modulo1', 'C_Modulo1UC'),
+      ('C_Modulo2', 'C_Modulo2UC'),
+      ('C_Modulo3', 'C_Modulo3UC'),
+      ('C_Modulo4', 'C_Modulo4UC'),
+      ('C_Modulo5', 'C_Modulo5UC'),
+      ('C_Modulo6', 'C_Modulo6UC'),
+      ('C_Modulo7', 'C_Modulo7UC'),
+      ('C_Modulo8', 'C_Modulo8UC'),
+      ('C_Modulo9', 'C_Modulo9UC'),
+      ('C_Modulo10', 'C_Modulo10UC'),
+      ('C_Modulo11', 'C_Modulo11UC'),
+      ('C_Modulo12', 'C_Modulo12UC'),
+   ]
+
+PDF_COMPETENCY_VALIDATION_FIELDS_PAIRED = [ 
+   ]
+
 
 PDF_FIELD_VALUE = 0
 PDF_FIELD_TYPE = 1

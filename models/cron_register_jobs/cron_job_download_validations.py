@@ -23,7 +23,7 @@ from ....maya_core.support.helper import create_HTML_list_from_list
 from ....maya_core.support.helper import get_data_from_pdf
 from ....maya_core.support.helper import is_set_flag,set_flag
 from ...support.fitz_pdf_templates import PDF_NOFIELDS_FITZ_VALIDATION, PDF_NOFIELDS_FITZ_COMPETENCY_VALIDATION
-from ...support.constants import PDF_VALIDATION_FIELDS_MANDATORY, PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY
+from ...support.constants import PDF_VALIDATION_FIELDS_MANDATORY, PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY, PDF_COMPETENCY_VALIDATION_FIELDS_SUBJECTS_PAIRED, PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED, PDF_COMPETENCY_VALIDATION_FIELDS_PAIRED, PDF_VALIDATION_FIELDS_PAIRED
 from ...support import constants
 
 from ..validation import STUDIES_VAL, COMPETENCY_VAL
@@ -158,6 +158,8 @@ class CronJobDownloadValidations(models.TransientModel):
     msg_text = 'estudios' if val_type == STUDIES_VAL else 'UC'
     chk_fields = PDF_NOFIELDS_FITZ_COMPETENCY_VALIDATION if val_type == COMPETENCY_VAL else PDF_NOFIELDS_FITZ_VALIDATION
     mandatory_fields = PDF_COMPETENCY_VALIDATION_FIELDS_MANDATORY if val_type == COMPETENCY_VAL else PDF_VALIDATION_FIELDS_MANDATORY
+    paired_fields_subjects_const =  PDF_COMPETENCY_VALIDATION_FIELDS_SUBJECTS_PAIRED if val_type == COMPETENCY_VAL else PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED
+    paired_fields_const =  PDF_COMPETENCY_VALIDATION_FIELDS_PAIRED if val_type == COMPETENCY_VAL else PDF_VALIDATION_FIELDS_PAIRED
     
     if val_type == STUDIES_VAL:
       assignments[0].set_extension_due_date(self._assigns_end_date_validation_period(
@@ -194,7 +196,7 @@ class CronJobDownloadValidations(models.TransientModel):
       a_user =  CronJobEnrolUsers.enrol_student(self, user, subject_id, course_id)  # usuario maya
   
       # obtención de la convalidación 
-      validation_list = [ val for val in a_user.validations_ids if val.course_id.id == course_id]
+      validation_list = [ val for val in a_user.validations_ids if val.course_id.id == course_id and val.validation_type == val_type]
       
       if len(validation_list) == 0:
         validation = self.env['maya_valid.validation'].create([
@@ -418,7 +420,7 @@ class CronJobDownloadValidations(models.TransientModel):
 
       # integridad en la selección de campos
       paired_fields = []
-      for paired_field in constants.PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED:
+      for paired_field in paired_fields_subjects_const:
         assert isinstance(paired_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_SUBJECTS_PAIRED. Cada entrada tiene que ser una tupla'
 
         if  ((fields[paired_field[0]][constants.PDF_FIELD_TYPE] != 'Button' and \
@@ -459,15 +461,20 @@ class CronJobDownloadValidations(models.TransientModel):
           del paired_fields[rm]
 
       if len(paired_fields) > 0:
-        _logger.error("No se han definido correctamente si se solicita AA o CO. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
+        if val_type == STUDIES_VAL:
+          _logger.error("No se han definido correctamente si se solicita AA o CO. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
+          submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ANP'))
+        else:
+          _logger.error("No se han definido correctamente las unidades de competencia que se presentan para la convalidación del uno o más módulos. Estudiante moodle id: {} {}".format(submission.userid, paired_fields))
+          submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ANU'))
+
         # TODO, descomentar. Se comenta para facilitar las pruebas
-        submission.save_grade(3, new_attempt = True, feedback = validation.create_correction('ANP'))
         submission.set_extension_due_date(to = new_timestamp)
         continue
 
       # integridad en la selección de campos
       paired_fields = []
-      for paired_field in constants.PDF_VALIDATION_FIELDS_PAIRED:
+      for paired_field in paired_fields_const:
         assert isinstance(paired_field, tuple),  f'Valor incorrecto en constants.PDF_VALIDATION_FIELDS_PAIRED. Cada entrada tiene que ser una tupla'
 
         if  ((fields[paired_field[0]][constants.PDF_FIELD_TYPE] != 'Button' and \
@@ -540,7 +547,7 @@ class CronJobDownloadValidations(models.TransientModel):
       for key in fields:
 
         # es el nombre del módulo
-        if key.startswith('C_Modulo') and len(key) < 12:
+        if key.startswith('C_Modulo') and len(key) < 12 and key[-2:] != 'UC':
           #code = fields[key][0][:(fields[key][0].find(' -'))]
           if fields[key][0][:2] == 'CV':
             code = fields[key][0][:6]
@@ -550,7 +557,7 @@ class CronJobDownloadValidations(models.TransientModel):
           if val_type == STUDIES_VAL:
             validation_type = fields[key + 'AACO'][0][:2].lower()
           else: # las competenciales siempre son convalidaciones
-            validation_type = 'CO'
+            validation_type = 'co'
           
           if len(code) == 0:
             continue

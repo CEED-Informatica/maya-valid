@@ -122,6 +122,7 @@ class Validation(models.Model):
     ('ERR2', 'Error al notificar los detalles de una subsanación'), 
     ('ANL', 'No es posible abrir el anexo.'),
     ('MNE', 'Se han indicado módulos que no existen.'),
+    ('ANU', 'Anexo no cumplimentado correctamente. En uno o más módulos no se han indicado las unidades de competencia presentadas para la convalidación.'),
     ], string ='Razón de la subsanación', 
     help = 'Permite indicar el motivo por el que se solicita la subsanación')
   
@@ -144,7 +145,7 @@ class Validation(models.Model):
 
   remarks = fields.Text(string = 'Observaciones subsanación', default = '', help = 'Observaciones que se muestran en el mensaje de subsanación. Sólo admite un párrafo') # observaciones subsanación
 
-  # indica si la reclanmacion ha sido reclamada
+  # indica si la convalidación ha sido reclamada
   claimed = fields.Boolean(default = False)
   remarks_claim = fields.Text(string = 'Observaciones reclamación', default = '', help = 'Observaciones que se muestran en el mensaje de resolución de la reclamación. Sólo admite un párrafo') # observaciones subsanación
 
@@ -479,7 +480,8 @@ class Validation(models.Model):
         self.student_surname.upper() if self.student_surname is not None else 'SIN-APELLIDOS', 
         self.student_name.upper() if self.student_name is not None else 'SIN-NOMBRE')
       
-    filename = '[{}][{}] {}, {}'.format(
+    filename = '{}[{}][{}] {}, {}'.format(
+        'UC ' if self.validation_type == COMPETENCY_VAL else '',
         self.student_id.moodle_id,
         self.attempt_number,
         self.student_surname.upper() if self.student_surname is not None else 'SIN-APELLIDOS', 
@@ -497,24 +499,7 @@ class Validation(models.Model):
     except Exception as e:
       _logger.error('Error descargando el fichero:' + str(e))
       return {}
-      """ return { 
-            'warning': {
-              'title': "¡Atención!", 
-              'message': "Esta convalidación ya ha sido notificada al estudiante. Cambiar su contenido implica la notificación del cambio en cuanto se realice la grabación"
-              }} """
-      """ return {
-        'type': 'ir.actions.act_window',
-        'target': 'new',
-        'context': {
-          "warning": {
-            'title': 'Atención',
-            'message': 'El fichero no puede ser descargado: '
-          }
-          
-          }
-        },
-      """
-  
+      
     self.documentation = encode_data
 
     return {
