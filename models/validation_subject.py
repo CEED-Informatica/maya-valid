@@ -174,7 +174,20 @@ class ValidationSubject(models.Model):
               'title': "¡Atención!", 
               'message': "Esta convalidación ya ha sido notificada al estudiante. Cambiar su contenido implica la notificación del cambio en cuanto se realice la grabación"
               }}
-      
+
+  @api.onchange('accepted')
+  def _change_mark_competency_validation(self):
+    self.ensure_one()
+    if self.validation_id.validation_type == 0:
+      return
+    
+    if self.accepted == '1':
+      self.mark = 'CO'
+      self.validation_reason = 'AUC'
+    else:
+      self.mark = ''
+      self.validation_reason = ''
+
   def _check_attribute_value(self, field_name, vals) -> bool:
     if isinstance(self._fields[field_name], fields.Char) or \
        isinstance(self._fields[field_name], fields.Text):
