@@ -23,7 +23,7 @@ class CronJobNotifyValidationsClaims(models.TransientModel):
   _name = 'maya_valid.cron_job_notify_validations_claims'
 
   @api.model
-  def cron_notify_validations_claims(self, validation_classroom_id, course_id, subject_id, validation_claim_task_id, type = STUDIES_VAL):
+  def cron_notify_validations_claims(self, validation_classroom_id, course_id, validation_claim_task_id, type = STUDIES_VAL):
     """
     Publica notificaciones sobre las reclamaciones de convalidaciones 
     correction notification indica si es una notificación para realizar una corrección sobre una notificación anterior
