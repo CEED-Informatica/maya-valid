@@ -23,7 +23,7 @@ class CronJobNotifyValidations(models.TransientModel):
   _name = 'maya_valid.cron_job_notify_validations'
 
   @api.model
-  def cron_notify_validations(self, validation_classroom_id, course_id, validation_task_id, validation_claim_task_id, type =STUDIES_VAL, correction_notification =  False):
+  def cron_notify_validations(self, validation_classroom_id, course_id, validation_task_id, validation_claim_task_id, val_type =STUDIES_VAL, correction_notification =  False):
     """
     Publica notificaciones sobre las convalidaciones 
     correction notification indica si es una notificación para realizar una corrección sobre una notificación anterior
@@ -42,9 +42,9 @@ class CronJobNotifyValidations(models.TransientModel):
       return
     
     if not correction_notification:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('validation_type','=', type)])
+      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('validation_type','=', val_type)])
     else:
-      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('situation','=', '5'), ('validation_type','=', type)])
+      validations = self.env['maya_valid.validation'].search([('course_id', '=', course_id), ('situation','=', '5'), ('validation_type','=', val_type)])
 
     if len(validations) == 0:
       return
@@ -112,8 +112,10 @@ class CronJobNotifyValidations(models.TransientModel):
     submissions = assignments[0].submissions()
 
     extra_info = ''
-    if type == STUDIES_VAL:    
+    if val_type == STUDIES_VAL:    
       extra_info = '<p>Para más información consulte la Tabla de Convalidaciones (Real Decreto 1085/2020, de 9 de diciembre).</p>'
+    else:
+      extra_info = '<p>Para más información consulte el Real Decreto de su título.</p>'
     
     for validation in validations:
 
@@ -172,5 +174,5 @@ class CronJobNotifyValidations(models.TransientModel):
         # lo añado a la lista de usuario a los que hay que cambiar la fecha de la reclamación
         users_to_change_claim_date.append((validation.student_id.moodle_id, claim_timestamp))
 
-    # aquello sobre los que ya se ha finalizado el proceso convalidación se pone fecha al periodo de reclamaciones
+    # aquellos sobre los que ya se ha finalizado el proceso convalidación, se pone fecha al periodo de reclamaciones
     claim_assignments[0].set_extension_due_date(users_to_change_claim_date)

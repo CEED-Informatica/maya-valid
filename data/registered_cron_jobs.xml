@@ -66,5 +66,16 @@
       <field name="nextcall_day">school_year.date_init</field>
       <field name="nextcall_hour">02:10:00</field>
     </record>
+
+    <record model="maya_core.cron_register" id="maya_valid.cron_notify_competency_validations">
+      <field name="name">Notificación convalidaciones por competencias</field>
+      <field name="key">NVUC</field>
+      <field name="context">FPC</field>
+      <field name="model">cron_job_notify_validations</field>
+      <field name="code">cron_notify_validations</field>
+      <field name="numbercall">1</field>
+      <field name="nextcall_day">school_year.date_init</field>
+      <field name="nextcall_hour">02:20:00</field>
+    </record>
   </data>
 </odoo>
