@@ -118,7 +118,11 @@ class CronJobDownloadValidationsClaims(models.TransientModel):
       
       validation = validation_list[0]
 
-  
+      if validation.claimed and validation.state == '15':   # ya ha sido resuelta y notificada al alumno
+        # en caso de que esté en trámite, cada vez que se ejecute el cron, se descargará de nuevo
+        # ni es eficiente, pero no hay muchas y no vale la pena el esfuerzo
+        return
+
       ############                     ############
       ##### comprobación de errores a subsanar ####
       ############                     ############
