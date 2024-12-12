@@ -25,9 +25,9 @@
       <field name="model">maya_valid.validation</field>
       <field name="arch" type="xml">
         <search>
+          <field name="student_surname" string="Apellidos"/>
           <field name="student_nia" string="NIA"/>
           <field name="student_name" string="Nombre"/>
-          <field name="student_surname" string="Apellidos"/>
           <filter name="filter_in_process" string="Por procesar" domain="['|', ('state', '=', '0'), ('state', '=', '1')]"/>
           <filter name="filter_resolved" string="Resueltas" domain="[('state', '=', '5')]"/>
           <filter name="filter_reviewed" string="Revisadas" domain="[('state', '=', '8')]"/>
