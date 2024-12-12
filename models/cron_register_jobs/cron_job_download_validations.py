@@ -536,7 +536,7 @@ class CronJobDownloadValidations(models.TransientModel):
       validation_subjects = []
       validation_subjects_code_previous = {}
       # diccionario con todos los code de los modulos solicitados en la anterior entrega
-      for val_subject in self.env['maya_valid.validation_subject'].search([('validation_id', '=', validation.id)]):
+      for val_subject in self.env['maya_valid.validation_subject'].search([('validation_id', '=', validation.id), ('validation_type','=', val_type)]):
         validation_subjects_code_previous[val_subject.subject_id.code] = {
           'id': val_subject.subject_id.id,
           'type': val_subject.validation_type } 
@@ -605,13 +605,13 @@ class CronJobDownloadValidations(models.TransientModel):
         submission.set_extension_due_date(to = new_timestamp)
         continue
 
-      # los módulos solicitados en anteriores entregas que no han sido solcitados en esta
+      # los módulos solicitados en anteriores entregas que no han sido solicitados en esta
       # se eliminan
       for val_key in validation_subjects_code_previous:
         _logger.error(" va: {} {}".format(validation_subjects_code_previous[val_key], validation.id))
         self.env['maya_valid.validation_subject']. \
           search([('subject_id', '=', validation_subjects_code_previous[val_key]['id']),
-                  ('validation_id', '=', validation.id)]). \
+                  ('validation_id', '=', validation.id),('validation_type','=', val_type)]). \
                   unlink()
 
       # añade nuevos registro, pero los mantiene en "el aire" hasta que se grabe el school_year 
